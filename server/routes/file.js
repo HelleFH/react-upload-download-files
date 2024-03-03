@@ -36,10 +36,15 @@ router.post(
     try {
       const { path, mimetype } = req.file;
       const { title } = req.body;
+      const { description } = req.body;
+      const { location } = req.body;
+
 
       // Save book information with file details
       const book = new Book({
         title,
+        description,
+        location,
         file_path: path.replace(/\\/g, '/'),  // Replace backslashes with forward slashes
         file_mimetype: mimetype,
       });

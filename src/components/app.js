@@ -3,10 +3,8 @@ import { Form, Button } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import { useHistory } from 'react-router-dom';
 
 const CreateBookWithFileUpload = () => {
-  const history = useHistory();
   const [file, setFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState('');
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
@@ -15,6 +13,9 @@ const CreateBookWithFileUpload = () => {
 
   const [book, setBook] = useState({
     title: '',
+    description: '',
+    location: ''
+
   });
 
   const onDrop = (files) => {
@@ -50,6 +51,9 @@ const CreateBookWithFileUpload = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('title', book.title);
+      formData.append('description', book.description);
+      formData.append('location', book.location);
+
 
       await axios.post(`${API_URL}/upload`, formData, {
         headers: {
@@ -109,6 +113,7 @@ const CreateBookWithFileUpload = () => {
             </div>
           )}
         </div>
+        <div>
         {/* Book form inputs */}
         <div className="form-group">
           <input
@@ -119,9 +124,31 @@ const CreateBookWithFileUpload = () => {
             value={book.title}
             onChange={handleInputChange}
           />
+</div>
+<div className="form-group">
+
+                 <input
+            type="text"
+            placeholder="Description of the Book"
+            name="description"
+            className="form-control"
+            value={book.description}
+            onChange={handleInputChange}
+          />
+</div>
+<div className="form-group">
+
+                 <input
+            type="text"
+            placeholder="Location of the Book"
+            name="location"
+            className="form-control"
+            value={book.location}
+            onChange={handleInputChange}
+          />
         </div>
-        {/* Add other book form fields similarly */}
-        <Button variant="primary" type="submit">
+        </div>
+        <Button className="btn btn-outline-warning btn-block mt-4 mb-4 w-100"  type="submit">
           Submit
         </Button>
       </Form>

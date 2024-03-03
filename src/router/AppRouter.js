@@ -1,19 +1,19 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from '../components/app';
-import Header from '../components/header';
+import ShowBookList from '../components/ShowBookList'; // Import the ShowBookList component
 
 const AppRouter = () => (
-  <BrowserRouter>
+  <Router>
     <div className="container">
-      <Header />
       <div className="main-content">
-        <Switch>
-          <Route component={App} path="/" exact={true} />
-        </Switch>
+        <Routes>
+          <Route element={<App />} path="/" exact />
+          <Route path="/books" element={<ShowBookList />} />
+        </Routes>
       </div>
     </div>
-  </BrowserRouter>
+  </Router>
 );
 
 export default AppRouter;
