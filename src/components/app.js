@@ -1,33 +1,27 @@
 import React, { useState, useRef } from 'react';
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
+import { Link, useHistory } from 'react-router-dom';
 
-
-const App = (props) => {
-  const [file, setFile] = useState(null); // state for storing actual image
-  const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
-  const [state, setState] = useState({
-    title: '',
-    description: ''
-  });
+const CreateBookWithFileUpload = () => {
+  const history = useHistory();
+  const [file, setFile] = useState(null);
+  const [previewSrc, setPreviewSrc] = useState('');
+  const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
-  const dropRef = useRef(); // React ref for managing the hover state of droppable area
+  const dropRef = useRef();
 
-  const handleInputChange = (event) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.value
-    });
-  };
+  const [book, setBook] = useState({
+    title: '',
+  });
+
   const onDrop = (files) => {
     const [uploadedFile] = files;
     setFile(uploadedFile);
     dropRef.current.style.border = '2px dashed #e9ebeb';
 
-  
     const fileReader = new FileReader();
     fileReader.onload = () => {
       setPreviewSrc(fileReader.result);
@@ -35,6 +29,7 @@ const App = (props) => {
     fileReader.readAsDataURL(uploadedFile);
     setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
   };
+
   const updateBorder = (dragState) => {
     if (dragState === 'over') {
       dropRef.current.style.border = '2px solid #000';
@@ -43,101 +38,90 @@ const App = (props) => {
     }
   };
 
-  const handleOnSubmit = async (event) => {
-    event.preventDefault();
-  
+  const handleBookSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-      const { title, description } = state;
-      if (title.trim() !== '' && description.trim() !== '') {
-        if (file) {
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('title', title);
-          formData.append('description', description);
-  
-          setErrorMsg('');
-          await axios.post(`${API_URL}/upload`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          await axios.post(`${API_URL}/upload`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          props.history.push('/list'); // add this line
-        } else {
-          setErrorMsg('Please select a file to add.');
-        }
-      } else {
-        setErrorMsg('Please enter all the field values.');
+      if (!file) {
+        setErrorMsg('Please select a file to add.');
+        return;
       }
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', book.title);
+
+      await axios.post(`${API_URL}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setFile(null);
+      setPreviewSrc('');
+      setIsPreviewAvailable(false);
+
+      // Redirect using history
+      history.push('/');
     } catch (error) {
-      error.response && setErrorMsg(error.response.data);
+      console.error('Error in form submission:', error);
+      setErrorMsg('Error submitting the form. Please try again.');
     }
+  };
+
+  const handleInputChange = (event) => {
+    setBook({
+      ...book,
+      [event.target.name]: event.target.value,
+    });
   };
 
   return (
     <React.Fragment>
-      <Form className="search-form" onSubmit={handleOnSubmit}>
+      <Form className="search-form" onSubmit={handleBookSubmit}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
-        <Row>
-          <Col>
-            <Form.Group controlId="title">
-              <Form.Control
-                type="text"
-                name="title"
-                value={state.title || ''}
-                placeholder="Enter title"
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group controlId="description">
-              <Form.Control
-                type="text"
-                name="description"
-                value={state.description || ''}
-                placeholder="Enter description"
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row >
         <div className="upload-section">
-  <Dropzone onDrop={onDrop}>
-    {({ getRootProps, getInputProps }) => (
-      <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
-        <input {...getInputProps()} />
-        <p>Drag and drop a file OR click here to select a file</p>
-        {file && (
-          <div>
-            <strong>Selected file:</strong> {file.name}
-          </div>
-        )}
-      </div>
-    )}
-  </Dropzone>
-  {previewSrc ? (
-    isPreviewAvailable ? (
-      <div className="image-preview">
-        <img className="preview-image" src={previewSrc} alt="Preview" />
-      </div>
-    ) : (
-      <div className="preview-message">
-        <p>No preview available for this file</p>
-      </div>
-    )
-  ) : (
-    <div className="preview-message">
-      <p>Image preview will be shown here after selection</p>
-    </div>
-  )}
-</div>
+          <Dropzone onDrop={onDrop}>
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
+                <input {...getInputProps()} />
+                <p>Drag and drop a file OR click here to select a file</p>
+                {file && (
+                  <div>
+                    <strong>Selected file:</strong> {file.name}
+                  </div>
+                )}
+              </div>
+            )}
+          </Dropzone>
+          {previewSrc ? (
+            isPreviewAvailable ? (
+              <div className="image-preview">
+                <img className="preview-image" src={previewSrc} alt="Preview" />
+              </div>
+            ) : (
+              <div className="preview-message">
+                <p>No preview available for this file</p>
+              </div>
+            )
+          ) : (
+            <div className="preview-message">
+              <p>Image preview will be shown here after selection</p>
+            </div>
+          )}
+        </div>
+        {/* Book form inputs */}
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Title of the Book"
+            name="title"
+            className="form-control"
+            value={book.title}
+            onChange={handleInputChange}
+          />
+        </div>
+        {/* Add other book form fields similarly */}
         <Button variant="primary" type="submit">
           Submit
         </Button>
@@ -146,4 +130,4 @@ const App = (props) => {
   );
 };
 
-export default App;
+export default CreateBookWithFileUpload;

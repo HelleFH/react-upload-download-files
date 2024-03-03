@@ -43,18 +43,16 @@ const FilesList = () => {
       <table className="files-table">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Description</th>
+   
             <th>Download File</th>
           </tr>
         </thead>
         <tbody>
           {filesList.length > 0 ? (
             filesList.map(
-              ({ _id, title, description, file_path, file_mimetype }) => (
+              ({ _id, file_path, file_mimetype }) => (
                 <tr key={_id}>
-                  <td className="file-title">{title}</td>
-                  <td className="file-description">{description}</td>
+        
                   <td>
                     <a
                       href="#/"

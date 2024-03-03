@@ -1,20 +1,18 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import ShowBookList from './ShowBookList'; // Import the ShowBookList component
 
-const Header = () => {
+const App = () => {
   return (
-    <div className="header">
-      <h1>File Upload And Download</h1>
-      <nav>
-        <NavLink activeClassName="active" to="/" exact={true}>
-          Home
-        </NavLink>
-        <NavLink activeClassName="active" to="/list">
-          Files List
-        </NavLink>
-      </nav>
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/list" component={FileList} />
+          <Route path="/books" component={ShowBookList} /> {/* Add this line */}
+        </Switch>
+      </div>
+    </Router>
   );
 };
 
-export default Header;
+export default App;
