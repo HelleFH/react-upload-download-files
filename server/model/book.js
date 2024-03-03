@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
-const { File } = require('./file');
 
-const bookSchema = new Schema({
+const bookSchema = new mongoose.Schema({
   title: { type: String, required: true },
-
-  file: { type: Schema.Types.ObjectId, ref: 'File' }, // Reference to the File model
+  file_path: { type: String, required: true },
+  file_mimetype: { type: String, required: true },
 });
 
 const Book = mongoose.model('Book', bookSchema);

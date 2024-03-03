@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const CreateBookWithFileUpload = () => {
   const history = useHistory();
@@ -62,7 +62,6 @@ const CreateBookWithFileUpload = () => {
       setIsPreviewAvailable(false);
 
       // Redirect using history
-      history.push('/');
     } catch (error) {
       console.error('Error in form submission:', error);
       setErrorMsg('Error submitting the form. Please try again.');

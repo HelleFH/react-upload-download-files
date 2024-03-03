@@ -22,23 +22,32 @@ function ShowBookList() {
       'There is no book record!'
     ) : (
       books.map((book, k) => (
-        <div key={k}>
-          <BookCard book={book} />
-          {book.file && (
-            <img
-              src={`http://localhost:3030/files/${book.file.file_path}`}
-              alt={`Book cover for ${book.title}`}
-              style={{ maxWidth: '100px', maxHeight: '100px' }}
-            />
-          )}
-        </div>
+        <BookCard book={book} key={k} />
       ))
     );
 
   return (
     <div className='ShowBookList'>
       <div className='container'>
-        {/* ... (your existing code) */}
+        <div className='row'>
+          <div className='col-md-12'>
+            <br />
+            <h2 className='display-4 text-center'>Books List</h2>
+          </div>
+
+          <div className='col-md-11'>
+            <Link
+              to='/create-book'
+              className='btn btn-outline-warning float-right'
+            >
+              + Add New Book
+            </Link>
+            <br />
+            <br />
+            <hr />
+          </div>
+        </div>
+
         <div className='list'>{bookList}</div>
       </div>
     </div>
