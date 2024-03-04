@@ -22,7 +22,7 @@ function ListingCard({ listing }) {
               to={`/edit-listing/${listing._id}`}
               className='btn btn-outline-info btn-lg btn-block'
             >
-              Edit Book
+              Edit Listing
             </Link>
     </div>
   );

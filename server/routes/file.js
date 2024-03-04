@@ -73,4 +73,26 @@ router.get('/listings', async (req, res) => {
   }
 });
 
+router.put('/listings/:id', async (req, res) => {
+  const id = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
+    res.json(updatedListing);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+router.get('/listings/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const listing = await Listing.findById(id);
+    res.json(listing);
+  } catch (error) {
+    console.error('Error fetching listing:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 module.exports = router;
