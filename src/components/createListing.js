@@ -8,14 +8,14 @@ import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 
 
-const CreateBookWithFileUpload = () => {
+const CreateListingWithFileUpload = () => {
   const [file, setFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState('');
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const dropRef = useRef();
 
-  const [book, setBook] = useState({
+  const [listing, setListing] = useState({
     title: '',
     description: '',
     location: ''
@@ -43,7 +43,7 @@ const CreateBookWithFileUpload = () => {
     }
   };
 
-  const handleBookSubmit = async (e) => {
+  const handleListingSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -54,9 +54,9 @@ const CreateBookWithFileUpload = () => {
 
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('title', book.title);
-      formData.append('description', book.description);
-      formData.append('location', book.location);
+      formData.append('title', listing.title);
+      formData.append('description', listing.description);
+      formData.append('location', listing.location);
 
 
       await axios.post(`${API_URL}/upload`, formData, {
@@ -77,15 +77,15 @@ const CreateBookWithFileUpload = () => {
   };
 
   const handleInputChange = (event) => {
-    setBook({
-      ...book,
+    setListing({
+      ...listing,
       [event.target.name]: event.target.value,
     });
   };
 
   return (
     <React.Fragment>
-      <Form className="search-form" onSubmit={handleBookSubmit}>
+      <Form className="search-form" onSubmit={handleListingSubmit}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
         <div className="upload-section">
           <Dropzone onDrop={onDrop}>
@@ -120,14 +120,14 @@ const CreateBookWithFileUpload = () => {
           )}
         </div>
         <div className='form-container'>
-        {/* Book form inputs */}
+        {/* Listing form inputs */}
         <div className="form-group">
           <input
             type="text"
-            placeholder="Title of the Book"
+            placeholder="Title of the Listing"
             name="title"
             className="form-control"
-            value={book.title}
+            value={listing.title}
             onChange={handleInputChange}
           />
 </div>
@@ -135,10 +135,10 @@ const CreateBookWithFileUpload = () => {
 
                  <textarea
             type="text"
-            placeholder="Description of the Book"
+            placeholder="Description of the Listing"
             name="description"
             className="form-control"
-            value={book.description}
+            value={listing.description}
             onChange={handleInputChange}
             style={{ height: '150px', verticalAlign: 'top' }}
 
@@ -148,10 +148,10 @@ const CreateBookWithFileUpload = () => {
 
                  <input
             type="text"
-            placeholder="Location of the Book"
+            placeholder="Location of the Listing"
             name="location"
             className="form-control"
-            value={book.location}
+            value={listing.location}
             onChange={handleInputChange}
           />
         </div>
@@ -164,4 +164,5 @@ const CreateBookWithFileUpload = () => {
   );
 };
 
-export default CreateBookWithFileUpload;
+export default CreateListingWithFileUpload;
+

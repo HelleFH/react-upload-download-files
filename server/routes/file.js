@@ -1,5 +1,5 @@
 const express = require('express');
-const { Book } = require('../model/book');
+const { Listing } = require('../model/listing');
 const multer = require('multer');
 
 const router = express.Router();
@@ -28,7 +28,7 @@ const upload = multer({
   },
 });
 
-// Route for handling both file upload and book data submission
+// Route for handling both file upload and listing data submission
 router.post(
   '/upload',
   upload.single('file'),
@@ -40,20 +40,20 @@ router.post(
       const { location } = req.body;
 
 
-      // Save book information with file details
-      const book = new Book({
+      // Save listing information with file details
+      const listing = new Listing({
         title,
         description,
         location,
         file_path: path.replace(/\\/g, '/'),  // Replace backslashes with forward slashes
         file_mimetype: mimetype,
       });
-      await book.save();
+      await listing.save();
 
-      res.json({ msg: 'Book data uploaded successfully.' });
+      res.json({ msg: 'Listing data uploaded successfully.' });
     } catch (error) {
-      console.error('Error while uploading book data:', error);
-      res.status(400).json({ error: 'Error while uploading book data. Try again later.' });
+      console.error('Error while uploading listing data:', error);
+      res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
     }
   },
   (error, req, res, next) => {
@@ -63,12 +63,12 @@ router.post(
   }
 );
 
-router.get('/books', async (req, res) => {
+router.get('/listings', async (req, res) => {
   try {
-    const books = await Book.find();
-    res.json(books);
+    const listings = await Listing.find();
+    res.json(listings);
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error('Error fetching listings:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
