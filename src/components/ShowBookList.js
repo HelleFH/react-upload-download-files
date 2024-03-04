@@ -30,7 +30,7 @@ function ShowBookList() {
 
   return (
     <div className='ShowBookList'>
-      <div className='container'>
+      <div className='container-lg'>
         <div className='row'>
           <div className='col-md-12'>
             <h2 className='display-4 text-center'>Books List</h2>

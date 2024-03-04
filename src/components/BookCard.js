@@ -7,7 +7,7 @@ function BookCard({ book }) {
         src={`http://localhost:3030/${book.file_path}`}
         alt={`Book cover for ${book.title}`}
         className='card-img-top'
-        style={{ maxWidth: '100px', maxHeight: '100px' }}
+        style={{ width: '100%', minHeight:'200px', maxHeight:'350px', objectFit:'cover' }}
       />
       <div className='card-body'>
         <h5 className='card-title'>{book.title}</h5>

@@ -1,8 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+
+
 
 const CreateBookWithFileUpload = () => {
   const [file, setFile] = useState(null);
@@ -87,13 +91,16 @@ const CreateBookWithFileUpload = () => {
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
+                <div className='drop-zone-container'>
                 <input {...getInputProps()} />
-                <p>Drag and drop a file OR click here to select a file</p>
+                <p>Upload Image <FontAwesomeIcon icon={faCloudArrowUp} /></p>
+
                 {file && (
                   <div>
-                    <strong>Selected file:</strong> {file.name}
+                     {file.name}
                   </div>
                 )}
+              </div>
               </div>
             )}
           </Dropzone>
@@ -109,11 +116,10 @@ const CreateBookWithFileUpload = () => {
             )
           ) : (
             <div className="preview-message">
-              <p>Image preview will be shown here after selection</p>
             </div>
           )}
         </div>
-        <div>
+        <div className='form-container'>
         {/* Book form inputs */}
         <div className="form-group">
           <input
@@ -127,13 +133,15 @@ const CreateBookWithFileUpload = () => {
 </div>
 <div className="form-group">
 
-                 <input
+                 <textarea
             type="text"
             placeholder="Description of the Book"
             name="description"
             className="form-control"
             value={book.description}
             onChange={handleInputChange}
+            style={{ height: '150px', verticalAlign: 'top' }}
+
           />
 </div>
 <div className="form-group">
@@ -148,9 +156,9 @@ const CreateBookWithFileUpload = () => {
           />
         </div>
         </div>
-        <Button className="btn btn-outline-warning btn-block mt-4 mb-4 w-100"  type="submit">
+        <button className="btn btn-outline-warning btn-block mt-4 mb-4 w-100"  type="submit">
           Submit
-        </Button>
+        </button>
       </Form>
     </React.Fragment>
   );
