@@ -12,7 +12,7 @@ function ShowListingList() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3030/listings');
+      const response = await axios.get('https://react-upload-download-files-be.onrender.com/listings');
       setListings(response.data);
     } catch (error) {
       console.log('Error from ShowListingList:', error);
@@ -21,7 +21,7 @@ function ShowListingList() {
 
   const handleDeleteListing = async (listingId) => {
     try {
-      const response = await axios.delete(`http://localhost:3030/listings/${listingId}`);
+      const response = await axios.delete(`https://react-upload-download-files-be.onrender.com/listings/${listingId}`);
       if (response.status === 200) {
         // Update the state to remove the deleted listing
         setListings((prevListings) => prevListings.filter((listing) => listing._id !== listingId));

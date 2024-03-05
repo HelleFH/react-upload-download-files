@@ -15,6 +15,8 @@
     "react-router-dom": "^6.22.2"
   },
   "scripts": {
-    "start": "nodemon server.js"
+"build":"yarn build",
+    "start": "yarn start"
+
   }
 }
