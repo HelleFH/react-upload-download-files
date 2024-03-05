@@ -56,9 +56,9 @@ function UpdateListingInfo(props) {
   const onSubmit = async (e) => {
     e.preventDefault();
   
-    // Check if a new file is selected
-    if (file) {
-      try {
+    try {
+      // Check if a new file is selected
+      if (file) {
         const formData = new FormData();
         formData.append('file', file);
   
@@ -88,31 +88,37 @@ function UpdateListingInfo(props) {
         const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
   
         // Handle the update response as needed
-        navigate('/');
-      } catch (error) {
-        console.error('Error updating listing with image:', error);
-      }
-    } else {
-      // If no new file is selected, update only title and description
-      const data = {
-        title: listing.title,
-        description: listing.description,
-        location: listing.location,
-      };
+        console.log('Listing updated successfully:', updateResponse.data);
+      } else {
+        // If no new file is selected, update only title and description
+        const data = {
+          title: listing.title,
+          description: listing.description,
+          location: listing.location,
+        };
   
-      console.log('Data being sent for update:', data);
+        console.log('Data being sent for update:', data);
   
-      try {
         // Update the listing with the existing data
         const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
   
         // Handle the update response as needed
-        navigate('/');
-      } catch (error) {
-        console.error('Error updating listing without image:', error);
+        console.log('Listing updated successfully:', updateResponse.data);
       }
+  
+      // Now delete the listing
+      const deleteResponse = await axios.delete(`http://localhost:3030/listings/${id}`);
+  
+      // Handle the delete response as needed
+      console.log('Listing deleted successfully:', deleteResponse.data);
+  
+      // Redirect or perform any additional actions after deleting
+      navigate('/');
+    } catch (error) {
+      console.error('Error updating or deleting listing:', error);
     }
   };
+  
     const onDeleteImage = async () => {
     try {
       console.log('Deleting image...');

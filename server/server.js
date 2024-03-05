@@ -37,9 +37,12 @@ db.once('open', () => {
 // Update a listing by ID
 app.put('/listings/:id', async (req, res) => {
   const id = req.params.id;
+  const { title, description, location, cloudinaryUrl } = req.body;
+
   const updatedData = req.body;
 
   try {
+    
     const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
     res.json(updatedListing);
   } catch (error) {
