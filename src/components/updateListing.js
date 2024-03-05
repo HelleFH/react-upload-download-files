@@ -14,6 +14,7 @@ function UpdateListingInfo(props) {
   const [listing, setListing] = useState({
     title: '',
     description: '',
+    location: '',
     cloudinaryUrl: '',
   });
 
@@ -38,6 +39,8 @@ function UpdateListingInfo(props) {
         setListing({
           title: res.data.title,
           description: res.data.description,
+          location: res.data.location,
+
           cloudinaryUrl: res.data.cloudinaryUrl,
         });
         setPreviewSrc(`${res.data.cloudinaryUrl}`);
@@ -50,35 +53,40 @@ function UpdateListingInfo(props) {
   const onChange = (e) => {
     setListing({ ...listing, [e.target.name]: e.target.value });
   };
-
   const onSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Check if a new file is selected
     if (file) {
       try {
         const formData = new FormData();
-        formData.append('image', file);
-
+        formData.append('file', file);
+  
+        // Include the required fields in the form data
+        formData.append('title', listing.title);
+        formData.append('description', listing.description);
+        formData.append('location', listing.location);
+  
         // Upload the new image
         const uploadResponse = await axios.post(`${API_URL}/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-
+  
         // Update the data with the new file path
         const data = {
           title: listing.title,
           description: listing.description,
+          location: listing.location,
           cloudinaryUrl: uploadResponse.data.cloudinaryUrl,
-          
         };
-        
-
+  
+        console.log('Data being sent for update:', data);
+  
         // Update the listing with the new data
         const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
-
+  
         // Handle the update response as needed
         navigate('/');
       } catch (error) {
@@ -89,12 +97,15 @@ function UpdateListingInfo(props) {
       const data = {
         title: listing.title,
         description: listing.description,
+        location: listing.location,
       };
-
+  
+      console.log('Data being sent for update:', data);
+  
       try {
         // Update the listing with the existing data
         const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
-
+  
         // Handle the update response as needed
         navigate('/');
       } catch (error) {
@@ -102,7 +113,7 @@ function UpdateListingInfo(props) {
       }
     }
   };
-  const onDeleteImage = async () => {
+    const onDeleteImage = async () => {
     try {
       console.log('Deleting image...');
       // Send a request to your server to delete the image
