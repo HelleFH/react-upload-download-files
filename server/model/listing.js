@@ -4,9 +4,8 @@ const listingSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   location: { type: String, required: true },
+  cloudinaryUrl: { type: String, required: true }, // Add this field for storing Cloudinary URL
 
-  file_path: { type: String, required: true },
-  file_mimetype: { type: String, required: true },
 });
 
 const Listing = mongoose.model('Listing', listingSchema);

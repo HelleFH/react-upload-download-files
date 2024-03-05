@@ -6,8 +6,6 @@ import { API_URL } from '../utils/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-
-
 const CreateListingWithFileUpload = () => {
   const [file, setFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState('');
@@ -18,8 +16,7 @@ const CreateListingWithFileUpload = () => {
   const [listing, setListing] = useState({
     title: '',
     description: '',
-    location: ''
-
+    location: '',
   });
 
   const onDrop = (files) => {
@@ -33,14 +30,6 @@ const CreateListingWithFileUpload = () => {
     };
     fileReader.readAsDataURL(uploadedFile);
     setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
-  };
-
-  const updateBorder = (dragState) => {
-    if (dragState === 'over') {
-      dropRef.current.style.border = '2px solid #000';
-    } else if (dragState === 'leave') {
-      dropRef.current.style.border = '2px dashed #e9ebeb';
-    }
   };
 
   const handleListingSubmit = async (e) => {
@@ -57,7 +46,6 @@ const CreateListingWithFileUpload = () => {
       formData.append('title', listing.title);
       formData.append('description', listing.description);
       formData.append('location', listing.location);
-
 
       await axios.post(`${API_URL}/upload`, formData, {
         headers: {
@@ -92,15 +80,15 @@ const CreateListingWithFileUpload = () => {
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
                 <div className='drop-zone-container'>
-                <input {...getInputProps()} />
-                <p>Upload Image <FontAwesomeIcon icon={faCloudArrowUp} /></p>
+                  <input {...getInputProps()} />
+                  <p>Upload Image <FontAwesomeIcon icon={faCloudArrowUp} /></p>
 
-                {file && (
-                  <div>
-                     {file.name}
-                  </div>
-                )}
-              </div>
+                  {file && (
+                    <div>
+                      {file.name}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </Dropzone>
@@ -120,43 +108,40 @@ const CreateListingWithFileUpload = () => {
           )}
         </div>
         <div className='form-container'>
-        {/* Listing form inputs */}
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Title of the Listing"
-            name="title"
-            className="form-control"
-            value={listing.title}
-            onChange={handleInputChange}
-          />
-</div>
-<div className="form-group">
-
-                 <textarea
-            type="text"
-            placeholder="Description of the Listing"
-            name="description"
-            className="form-control"
-            value={listing.description}
-            onChange={handleInputChange}
-            style={{ height: '150px', verticalAlign: 'top' }}
-
-          />
-</div>
-<div className="form-group">
-
-                 <input
-            type="text"
-            placeholder="Location of the Listing"
-            name="location"
-            className="form-control"
-            value={listing.location}
-            onChange={handleInputChange}
-          />
+          {/* Listing form inputs */}
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Title of the Listing"
+              name="title"
+              className="form-control"
+              value={listing.title}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <textarea
+              type="text"
+              placeholder="Description of the Listing"
+              name="description"
+              className="form-control"
+              value={listing.description}
+              onChange={handleInputChange}
+              style={{ height: '150px', verticalAlign: 'top' }}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Location of the Listing"
+              name="location"
+              className="form-control"
+              value={listing.location}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
-        </div>
-        <button className="btn btn-outline-warning btn-block mt-4 mb-4 w-100"  type="submit">
+        <button className="btn btn-outline-warning btn-block mt-4 mb-4 w-100" type="submit">
           Submit
         </button>
       </Form>
@@ -165,4 +150,3 @@ const CreateListingWithFileUpload = () => {
 };
 
 export default CreateListingWithFileUpload;
-

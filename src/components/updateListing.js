@@ -4,6 +4,7 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { API_URL } from '../utils/constants';
 
 function UpdateListingInfo(props) {
   const dropRef = useRef();
@@ -13,24 +14,23 @@ function UpdateListingInfo(props) {
   const [listing, setListing] = useState({
     title: '',
     description: '',
-    file_path: '',
+    cloudinaryUrl: '',
   });
 
   const onDrop = (acceptedFiles) => {
     const currentFile = acceptedFiles[0];
     setFile(currentFile);
-  
+
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       setPreviewSrc(reader.result);
     });
-  
+
     reader.readAsDataURL(currentFile);
   };
 
   const { id } = useParams();
   const navigate = useNavigate();
-
   useEffect(() => {
     axios
       .get(`http://localhost:3030/listings/${id}`)
@@ -38,12 +38,12 @@ function UpdateListingInfo(props) {
         setListing({
           title: res.data.title,
           description: res.data.description,
-          file_path: res.data.file_path,
+          cloudinaryUrl: res.data.cloudinaryUrl,
         });
-        setPreviewSrc(`http://localhost:3030/${res.data.file_path}`);
+        setPreviewSrc(`${res.data.cloudinaryUrl}`);
       })
       .catch((err) => {
-        console.log('Error from UpdateListingInfo');
+        console.error('Error fetching listing:', err); // Log the error for debugging
       });
   }, [id]);
 
@@ -51,22 +51,70 @@ function UpdateListingInfo(props) {
     setListing({ ...listing, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      title: listing.title,
-      description: listing.description,
-    };
+    // Check if a new file is selected
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
 
-    axios
-      .put(`http://localhost:3030/listings/${id}`, data)
-      .then((res) => {
-        navigate(`/`);
-      })
-      .catch((err) => {
-        console.log('Error in UpdateListingInfo!', err);
-      });
+        // Upload the new image
+        const uploadResponse = await axios.post(`${API_URL}/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        // Update the data with the new file path
+        const data = {
+          title: listing.title,
+          description: listing.description,
+          cloudinaryUrl: uploadResponse.data.cloudinaryUrl,
+          
+        };
+        
+
+        // Update the listing with the new data
+        const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
+
+        // Handle the update response as needed
+        navigate('/');
+      } catch (error) {
+        console.error('Error updating listing with image:', error);
+      }
+    } else {
+      // If no new file is selected, update only title and description
+      const data = {
+        title: listing.title,
+        description: listing.description,
+      };
+
+      try {
+        // Update the listing with the existing data
+        const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
+
+        // Handle the update response as needed
+        navigate('/');
+      } catch (error) {
+        console.error('Error updating listing without image:', error);
+      }
+    }
+  };
+  const onDeleteImage = async () => {
+    try {
+      console.log('Deleting image...');
+      // Send a request to your server to delete the image
+      await axios.delete(`http://localhost:3030/listings/${id}/delete-image`);
+      console.log('Image deleted successfully');
+  
+      // Update the state to remove the image and preview
+      setFile(null);
+      setPreviewSrc('');
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
   };
 
   return (
@@ -98,6 +146,7 @@ function UpdateListingInfo(props) {
                       {file && (
                         <div>
                           {file.name}
+                    
                         </div>
                       )}
                     </div>
@@ -105,10 +154,15 @@ function UpdateListingInfo(props) {
                 )}
               </Dropzone>
               {previewSrc && (
-                <div className="image-preview">
-                  <img className="preview-image" src={previewSrc} alt="Preview" />
-                </div>
-              )}
+  <div className="image-preview">
+    <img className="preview-image" src={previewSrc} alt="Preview" />
+  </div>
+)}
+{!previewSrc && listing.file_path && (
+  <div className="image-preview">
+    <img className="preview-image" src={`http://localhost:3030/${listing.cloudinaryUrl}`} alt="Preview" />
+  </div>
+)}
             </div>
             <div className='form-group'>
               <label htmlFor='title'>Title</label>
@@ -120,6 +174,9 @@ function UpdateListingInfo(props) {
                 onChange={onChange}
               />
             </div>
+                  <button type="button" className="btn btn-danger" onClick={onDeleteImage}>
+                            Delete Image
+                          </button>
             <br />
             <div className='form-group'>
               <label htmlFor='description'>Description</label>
