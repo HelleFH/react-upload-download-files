@@ -1,12 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Form } from 'react-bootstrap';
-import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
-import ImageUpload from './imageUpload'; // Adjust the path based on your project structure
-import isPreviewAvailable from './imageUpload'; // Adjust the path based on your project structure
+import ImageUpload from './imageUpload'; 
 
 const CreateListingWithFileUpload = () => {
   const [file, setFile] = useState(null);
@@ -58,7 +54,6 @@ const CreateListingWithFileUpload = () => {
       setPreviewSrc('');
       setIsPreviewAvailable(false);
 
-      // Redirect using history
     } catch (error) {
       console.error('Error in form submission:', error);
       setErrorMsg('Error submitting the form. Please try again.');

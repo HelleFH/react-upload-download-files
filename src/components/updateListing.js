@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useParams, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import ImageUpload from './imageUpload'; // Adjust the path based on your project structure
-import isPreviewAvailable from './imageUpload'; // Adjust the path based on your project structure
+import ImageUpload from './imageUpload'; 
+import isPreviewAvailable from './imageUpload'; 
 
 function UpdateListingInfo(props) {
   const dropRef = useRef();
@@ -45,7 +45,7 @@ function UpdateListingInfo(props) {
         setPreviewSrc(`${res.data.cloudinaryUrl}`);
       })
       .catch((err) => {
-        console.error('Error fetching listing:', err); // Log the error for debugging
+        console.error('Error fetching listing:', err); 
       });
   }, [id]);
 
@@ -56,12 +56,10 @@ function UpdateListingInfo(props) {
     e.preventDefault();
   
     try {
-      // Check if a new file is selected
       if (file) {
         const formData = new FormData();
         formData.append('file', file);
   
-        // Include the required fields in the form data
         formData.append('title', listing.title);
         formData.append('description', listing.description);
         formData.append('location', listing.location);
@@ -73,7 +71,6 @@ function UpdateListingInfo(props) {
           },
         });
   
-        // Update the data with the new file path
         const data = {
           title: listing.title,
           description: listing.description,
@@ -86,13 +83,12 @@ function UpdateListingInfo(props) {
         // Update the listing with the new data
         const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
   
-        // Handle the update response as needed
         console.log('Listing updated successfully:', updateResponse.data);
         navigate('/');
 
 
       } else {
-        // If no new file is selected, update only title and description
+        // If no new file is selected, only update title and description
         const data = {
           title: listing.title,
           description: listing.description,
@@ -108,34 +104,17 @@ function UpdateListingInfo(props) {
         console.log('Listing updated successfully:', updateResponse.data);
       }
   
-      // Now delete the listing
+      // Delete the old listing
       const deleteResponse = await axios.delete(`http://localhost:3030/listings/${id}`);
   
-      // Handle the delete response as needed
       console.log('Listing deleted successfully:', deleteResponse.data);
   
-      // Redirect or perform any additional actions after deleting
       navigate('/');
     } catch (error) {
       console.error('Error updating or deleting listing:', error);
     }
   };
   
-    const onDeleteImage = async () => {
-    try {
-      console.log('Deleting image...');
-      // Send a request to your server to delete the image
-      await axios.delete(`http://localhost:3030/listings/${id}/delete-image`);
-      console.log('Image deleted successfully');
-  
-      // Update the state to remove the image and preview
-      setFile(null);
-      setPreviewSrc('');
-    } catch (error) {
-      console.error('Error deleting image:', error);
-    }
-  };
-
   return (
     <div className='UpdateListingInfo'>
       <div className='container'>
@@ -170,9 +149,7 @@ function UpdateListingInfo(props) {
                 onChange={onChange}
               />
             </div>
-                  <button type="button" className="btn btn-danger" onClick={onDeleteImage}>
-                            Delete Image
-                          </button>
+      
             <br />
             <div className='form-group'>
               <label htmlFor='description'>Description</label>

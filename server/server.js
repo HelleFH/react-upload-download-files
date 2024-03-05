@@ -4,11 +4,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
-
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const uploadRoute = require('./routes/uploadRoute');
-
 require('./db/db');
 const { Listing } = require('./model/listing');
 

@@ -33,14 +33,11 @@ router.delete('/listings/:id/delete-image', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
-  // Add other routes for listing operations (get, update, delete) here
-  // Assuming you have something like this in your server code
+
 router.delete('/listings/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Perform the delete operation based on the ID
     const deletedListing = await Listing.findByIdAndDelete(id);
 
     if (!deletedListing) {
@@ -53,6 +50,6 @@ router.delete('/listings/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
+ 
   module.exports = router;
   

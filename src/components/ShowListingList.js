@@ -7,25 +7,44 @@ function ShowListingList() {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3030/listings')
-      .then((res) => {
-        setListings(res.data);
-      })
-      .catch((err) => {
-        console.log('Error from ShowListingList');
-      });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3030/listings');
+      setListings(response.data);
+    } catch (error) {
+      console.log('Error from ShowListingList:', error);
+    }
+  };
+
+  const handleDeleteListing = async (listingId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3030/listings/${listingId}`);
+      if (response.status === 200) {
+        // Update the state to remove the deleted listing
+        setListings((prevListings) => prevListings.filter((listing) => listing._id !== listingId));
+        console.log('Listing deleted successfully:', response.data);
+      } else {
+        console.error('Failed to delete listing');
+      }
+    } catch (error) {
+      console.error('Error deleting listing:', error);
+    }
+  };
 
   const listingList =
     listings.length === 0 ? (
       <div className='alert alert-info'>There is no listing record!</div>
     ) : (
-      listings.map((listing) => (
-        <div className='col-md-4 mb-3' key={listing._id}>
-          <ListingCard listing={listing} />
-        </div>
-      ))
+      <div className='grid'>
+        {listings.map((listing) => (
+          <div key={listing._id}>
+            <ListingCard listing={listing} onDelete={handleDeleteListing} />
+          </div>
+        ))}
+      </div>
     );
 
   return (
