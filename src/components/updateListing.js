@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import Dropzone from 'react-dropzone';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from '../utils/constants';
+import ImageUpload from './imageUpload'; // Adjust the path based on your project structure
+import isPreviewAvailable from './imageUpload'; // Adjust the path based on your project structure
 
 function UpdateListingInfo(props) {
   const dropRef = useRef();
@@ -89,6 +88,9 @@ function UpdateListingInfo(props) {
   
         // Handle the update response as needed
         console.log('Listing updated successfully:', updateResponse.data);
+        navigate('/');
+
+
       } else {
         // If no new file is selected, update only title and description
         const data = {
@@ -152,35 +154,12 @@ function UpdateListingInfo(props) {
 
         <div className='col-md-8 m-auto'>
           <form noValidate onSubmit={onSubmit}>
-            <div className="upload-section">
-              <Dropzone onDrop={onDrop}>
-                {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
-                    <div className='drop-zone-container'>
-                      <input {...getInputProps()} />
-                      <p>Upload Image <FontAwesomeIcon icon={faCloudArrowUp} /></p>
-
-                      {file && (
-                        <div>
-                          {file.name}
-                    
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </Dropzone>
-              {previewSrc && (
-  <div className="image-preview">
-    <img className="preview-image" src={previewSrc} alt="Preview" />
-  </div>
-)}
-{!previewSrc && listing.file_path && (
-  <div className="image-preview">
-    <img className="preview-image" src={`http://localhost:3030/${listing.cloudinaryUrl}`} alt="Preview" />
-  </div>
-)}
-            </div>
+           <ImageUpload
+  onDrop={onDrop}
+  file={file}
+  previewSrc={previewSrc}
+  isPreviewAvailable={isPreviewAvailable}
+/>
             <div className='form-group'>
               <label htmlFor='title'>Title</label>
               <input

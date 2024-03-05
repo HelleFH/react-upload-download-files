@@ -5,6 +5,8 @@ import axios from 'axios';
 import { API_URL } from '../utils/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import ImageUpload from './imageUpload'; // Adjust the path based on your project structure
+import isPreviewAvailable from './imageUpload'; // Adjust the path based on your project structure
 
 const CreateListingWithFileUpload = () => {
   const [file, setFile] = useState(null);
@@ -22,7 +24,6 @@ const CreateListingWithFileUpload = () => {
   const onDrop = (files) => {
     const [uploadedFile] = files;
     setFile(uploadedFile);
-    dropRef.current.style.border = '2px dashed #e9ebeb';
 
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -75,38 +76,12 @@ const CreateListingWithFileUpload = () => {
     <React.Fragment>
       <Form className="search-form" onSubmit={handleListingSubmit}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
-        <div className="upload-section">
-          <Dropzone onDrop={onDrop}>
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
-                <div className='drop-zone-container'>
-                  <input {...getInputProps()} />
-                  <p>Upload Image <FontAwesomeIcon icon={faCloudArrowUp} /></p>
-
-                  {file && (
-                    <div>
-                      {file.name}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </Dropzone>
-          {previewSrc ? (
-            isPreviewAvailable ? (
-              <div className="image-preview">
-                <img className="preview-image" src={previewSrc} alt="Preview" />
-              </div>
-            ) : (
-              <div className="preview-message">
-                <p>No preview available for this file</p>
-              </div>
-            )
-          ) : (
-            <div className="preview-message">
-            </div>
-          )}
-        </div>
+        <ImageUpload
+  onDrop={onDrop}
+  file={file}
+  previewSrc={previewSrc}
+  isPreviewAvailable={isPreviewAvailable}
+/>
         <div className='form-container'>
           {/* Listing form inputs */}
           <div className="form-group">
