@@ -9,8 +9,8 @@ const CreateListingWithFileUpload = () => {
   const [previewSrc, setPreviewSrc] = useState('');
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const dropRef = useRef();
 
+  
   const [listing, setListing] = useState({
     title: '',
     description: '',

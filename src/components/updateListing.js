@@ -6,7 +6,6 @@ import ImageUpload from './imageUpload';
 import isPreviewAvailable from './imageUpload'; 
 
 function UpdateListingInfo(props) {
-  const dropRef = useRef();
   const [file, setFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState('');
 
