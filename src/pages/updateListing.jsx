@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from '../utils/constants';
-import ImageUpload from './imageUpload';
-import isPreviewAvailable from './imageUpload';
+import { API_URL } from "../utils/constants";
+
+import ImageUpload from '../components/imageUpload';
+import isPreviewAvailable from '../components/imageUpload';
 
 function UpdateListingInfo(props) {
   const [file, setFile] = useState(null);
@@ -112,10 +113,13 @@ function UpdateListingInfo(props) {
       <div className='container'>
         <div className='row'>
           <div className='col-md-8 m-auto'>
-            <br />
-            <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+              <Link to='/' >
+              <button className='mt-3 mb-3  float-right button button--blue'> 
         Back to Listings
+        </button>
+
       </Link>
+
           </div>
           <div className='col-md-8 m-auto'>
             <h1 className='display-4 text-center'>Edit Listing</h1>
@@ -124,7 +128,7 @@ function UpdateListingInfo(props) {
         </div>
 
         <div className='col-md-8 m-auto'>
-          <form noValidate onSubmit={onSubmit}>
+          <form noValidate onSubmit={onSubmit} className='d-flex gap-4 flex-column'>
             <ImageUpload
               onDrop={onDrop}
               file={file}
@@ -164,11 +168,10 @@ function UpdateListingInfo(props) {
                 onChange={onChange}
               />
             </div>
-            <br />
 
             <button
               type='submit'
-              className='btn btn-outline-info btn-lg btn-block'
+              className=' button button--orange -block mt-4'
             >
               Update Listing
             </button>

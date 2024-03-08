@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import ListingCard from './ListingCard';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
+import ListingCard from '../components/ListingCard';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
+import { API_URL } from "../utils/constants";
 
-import { API_URL } from '../utils/constants';
 
 function ShowListingList() {
   const [combinedListings, setCombinedListings] = useState([]);
@@ -96,8 +96,10 @@ function ShowListingList() {
       <h1 className='text-center display-1' style={{fontFamily:'Cormonrant'}}>Listings</h1>
       <p className='text-center'>Feel free to create, edit or delete listings</p>
       <div className='col-md-12'>
-        <Link to='/create-listing' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+        <Link to='/create-listing'>
+          <button  className='mt-3 mb-3  float-right button button--blue'>
           + Add New Listing
+          </button>
         </Link>
       </div>
       <div className='container-lg grid-container'>

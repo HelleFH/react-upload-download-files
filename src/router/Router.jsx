@@ -1,12 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import CreateListingWithFileUpload from '../components/createListing';
-import ShowListingList from '../components/ShowListingList'; 
-import UpdateListingInfo from '../components/updateListing';
-import DetailPage from '../components/IndividualPage';
+import CreateListingWithFileUpload from '../pages/createListing';
+import ShowListingList from '../pages/ShowListingList'; 
+import UpdateListingInfo from '../pages/updateListing';
+import DetailPage from '../pages/IndividualPage';
+import Layout from '../layout';
+
 
 const AppRouter = () => (
   <Router>
+        <Layout>
+
     <div className="container">
       <div className="main-content">
         <Routes>
@@ -17,6 +21,8 @@ const AppRouter = () => (
         </Routes>
       </div>
     </div>
+    </Layout>
+
   </Router>
 );
 

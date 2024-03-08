@@ -7,9 +7,9 @@ const ImageUpload = ({ onDrop, file, previewSrc, isPreviewAvailable }) => {
   };
 
   return (
-    <div className="upload-section">
+    <div className="upload-section w-100">
       <div className='upload-zone' style={{ cursor: 'pointer' }}>
-        <div className='bg-light text-dark mt-2 mb-2 w-50 pl-1'>
+        <div className='bg-light text-dark mt-2 mb-2 w-75  p-1'>
           <input  type="file" className='text-dark ml-1' onChange={handleFileChange} accept="image/*" />
 
         

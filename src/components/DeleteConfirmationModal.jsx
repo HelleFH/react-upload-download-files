@@ -31,7 +31,7 @@ const DeleteConfirmationModal = ({ isOpen, onCancel, onConfirm }) => {
               <div className='modal-footer'>
                 <button
                   type='button'
-                  className='btn btn-secondary'
+                  className=' -secondary'
                   data-dismiss='modal'
                   onClick={onCancel}
                 >
@@ -39,7 +39,7 @@ const DeleteConfirmationModal = ({ isOpen, onCancel, onConfirm }) => {
                 </button>
                 <button
                   type='button'
-                  className='btn btn-danger'
+                  className=' -danger'
                   onClick={onConfirm}
                 >
                   Delete

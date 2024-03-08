@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import ImageUpload from './imageUpload';
+import ImageUpload from '../components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -73,8 +73,10 @@ const CreateListingWithFileUpload = () => {
 
   return (
     <>
-      <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+      <Link to='/' >
+        <button className='button button--blue mt-3 mb-3  float-right'>
         Back to Listings
+        </button>
       </Link>
       <Form className="search-form" onSubmit={handleListingSubmit}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
@@ -119,10 +121,10 @@ const CreateListingWithFileUpload = () => {
           </div>
         </div>
         <div className='d-flex w-100 float-right justify-content-end gap-2'>
-          <Link to="/" className="btn btn-outline-warning btn-block mt-4 mb-4 w-25">
+          <Link to="/" className="  mt-4 mb-4 w-25 button button--blue">
             Cancel
           </Link>
-          <button className=" btn btn-outline-warning btn-block mt-4 mb-4 w-25" type="submit">
+          <button className="  mt-4 mb-4 w-25 button button--orange" type="submit">
             Submit
           </button>
         </div>

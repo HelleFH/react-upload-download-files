@@ -3,8 +3,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
 import localListings from '../data/localListings.json';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
-import ListingCard from './ListingCard';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
+import ListingCard from '../components/ListingCard';
 
 const IndividualPage = () => {
   const [combinedListings, setCombinedListings] = useState([]);
@@ -60,16 +60,17 @@ const IndividualPage = () => {
 
   return (
     <div className="container mt-5">
-      <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+      <Link to='/' >
+        <button className='button button--blue mt-3 mb-3  float-right'>
         Back to Listings
+        </button>
       </Link>
       <div className='col-md-12 mx-auto' style={{maxWidth:'800px'}}>
         <div className='container-lg'>
           {loading ? (
             <div className='text-center'>Loading...</div>
           ) : singleListing ? (
-            <div>
-              {/* Replace the existing HTML with the ListingCard component */}
+            <div className="individual-listing-container">
               <ListingCard listing={singleListing} onDelete={() => setShowDeleteModal(true)} />
               <DeleteConfirmationModal
                 isOpen={showDeleteModal}

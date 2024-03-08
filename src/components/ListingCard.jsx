@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 function ListingCard({ listing, onDelete }) {
@@ -18,22 +18,22 @@ function ListingCard({ listing, onDelete }) {
         />
       </Link>
       <div className='card-body'>
-        <h5 className='card-title' style={{height:"40px"}}>{listing.title}</h5>
-        <p className='card-location mt-2 mb-2 text-strong'>{listing.location}</p>
+        <h5 className='card-title' style={{ height: '40px', whiteSpace:'nowrap' }}>{listing.title}</h5>
+        <p className='card-location fw-bold mt-2 mb-2'>{listing.location}</p>
         <p className='card-description mb-3' style={{ height: '70px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-  {listing.description}
-</p>
-        <div className='d-flex justify-content-end width-100 mt-4'> 
+          {listing.description}
+        </p>
+        <div className='d-flex justify-content-end width-100 mt-4'>
           <button
-          onClick={(e) => handleDelete(e)}
-          className='delete-listing-button btn'
-          style={{ marginRight: '10px' }}
-        >
-          Delete Listing
-        </button>
+            onClick={(e) => handleDelete(e)}
+            className='button button--blue'
+            style={{ marginRight: '10px' }}
+          >
+            Delete Listing
+          </button>
           <Link
             to={`/edit-listing/${listing._id}`}
-            className='edit-listing-button btn btn-outline-warning'
+            className='button button--orange '
           >
             Edit Listing
           </Link>
@@ -42,5 +42,16 @@ function ListingCard({ listing, onDelete }) {
     </div>
   );
 }
+
+ListingCard.propTypes = {
+  listing: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    cloudinaryUrl: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
 
 export default ListingCard;
