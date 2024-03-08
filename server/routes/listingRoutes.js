@@ -7,7 +7,7 @@ const {
   getListings,
   updateListing,
   uploadListing,
-} = require('../controllers/listingController');
+} = require('../controller/listingController');
 const upload = require('../middleware/upload');
 const cloudinary = require('cloudinary').v2;
 
