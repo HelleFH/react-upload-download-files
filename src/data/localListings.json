@@ -1,0 +1,31 @@
+[
+    {
+      "_id": "1",
+      "title": "Country House in France",
+      "description": "Escape to the serene beauty of Provence, France, with this charming country house. Surrounded by rolling vineyards and picturesque landscapes, this retreat offers a perfect blend of tranquility and luxury. Enjoy the rustic elegance of the interior, relax in the expansive garden, and savor the flavors of local wines. A true haven for nature lovers and those seeking an authentic French countryside experience.",
+      "location": "Provence, France",
+      "cloudinaryUrl": "https://res.cloudinary.com/dvagswjsf/image/upload/v1709836480/qdbnjuta0o3xeqgp1aft.png"
+    },
+    {
+      "_id": "2",
+      "title": "Modern Luxury Flat in the City",
+      "description": "Indulge in urban sophistication with this modern and luxurious flat situated in the vibrant heart of the city. Immerse yourself in contemporary design, state-of-the-art amenities, and breathtaking city views. This stylish retreat is perfect for those who appreciate the convenience of city living without compromising on comfort and elegance. Experience the epitome of metropolitan lifestyle in this exclusive city flat.",
+      "location": "Downtown, Metropolis",
+      "cloudinaryUrl": "https://res.cloudinary.com/dvagswjsf/image/upload/v1709836480/qdbnjuta0o3xeqgp1aft.png"
+    },
+    {
+      "_id": "3",
+      "title": "Seaside Town House in England",
+      "description": "Discover the charm of coastal living with this quaint town house overlooking the sea in a picturesque English coastal town. Wake up to the soothing sound of waves, explore cobbled streets, and enjoy breathtaking ocean views from your doorstep. Immerse yourself in the rich maritime history and seaside ambiance, making this town house the perfect escape for those seeking a peaceful coastal retreat.",
+      "location": "Coastal Town, England",
+      "cloudinaryUrl": "https://res.cloudinary.com/dvagswjsf/image/upload/v1709836480/qdbnjuta0o3xeqgp1aft.png"
+    },
+    {
+      "_id": "4",
+      "title": "Unique Global Getaway",
+      "description": "Embark on a journey of discovery with this unique global getaway. This extraordinary vacation spot offers a one-of-a-kind experience in various locations around the world. From hidden tropical paradises to historic cultural hubs, each destination is carefully curated to provide a distinctive and unforgettable adventure. Immerse yourself in the diverse beauty and uniqueness of different corners of the globe.",
+      "location": "Various Locations",
+      "cloudinaryUrl": "https://res.cloudinary.com/dvagswjsf/image/upload/v1709836480/qdbnjuta0o3xeqgp1aft.png"
+    }
+  ]
+  
