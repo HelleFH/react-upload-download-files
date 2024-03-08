@@ -23,7 +23,7 @@ function ListingCard({ listing, onDelete }) {
         <p className='card-description mb-3' style={{ height: '70px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
   {listing.description}
 </p>
-        <div className='d-flex justify-content-end width-100'> 
+        <div className='d-flex justify-content-end width-100 mt-4'> 
           <button
           onClick={(e) => handleDelete(e)}
           className='delete-listing-button btn'
