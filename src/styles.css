@@ -28,7 +28,7 @@ p {
 
 .card-img-top {
   min-width: 300px;
-  max-height: 350px;
+  max-height: 500px;
   object-fit: cover;
 }
 

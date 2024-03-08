@@ -63,7 +63,7 @@ const IndividualPage = () => {
       <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
         Back to Listings
       </Link>
-      <div className='col-md-12'>
+      <div className='col-md-12 mx-auto' style={{maxWidth:'800px'}}>
         <div className='container-lg'>
           {loading ? (
             <div className='text-center'>Loading...</div>
