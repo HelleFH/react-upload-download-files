@@ -93,6 +93,8 @@ function ShowListingList() {
 
   return (
     <div className='ShowListingList'>
+      <h1 className='text-center display-1' style={{fontFamily:'Cormonrant'}}>Listings</h1>
+      <p className='text-center'>Feel free to create, edit or delete listings</p>
       <div className='col-md-12'>
         <Link to='/create-listing' className='mt-3 mb-3 btn btn-outline-warning float-right'>
           + Add New Listing

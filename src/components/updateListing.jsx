@@ -113,9 +113,9 @@ function UpdateListingInfo(props) {
         <div className='row'>
           <div className='col-md-8 m-auto'>
             <br />
-            <Link to='/' className='btn btn-outline-warning float-left'>
-              Show Book List
-            </Link>
+            <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+        Back to Listings
+      </Link>
           </div>
           <div className='col-md-8 m-auto'>
             <h1 className='display-4 text-center'>Edit Listing</h1>
