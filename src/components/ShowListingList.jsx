@@ -11,14 +11,19 @@ function ShowListingList() {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedListingId, setSelectedListingId] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/listings`);
         const mongodbListings = response.data;
+
+        // Load localListings synchronously
         const localListings = require('../data/localListings.json');
 
+        // Combine MongoDB and local listings
         setCombinedListings([...mongodbListings, ...localListings]);
+
         setError(null);
       } catch (error) {
         console.log('Error fetching listings:', error);
@@ -27,7 +32,7 @@ function ShowListingList() {
     };
 
     fetchData();
-  }, []);
+  }, []); // Empty dependency array to ensure it runs only once
   const truncateDescription = (description, wordCount) => {
     const words = description.split(' ');
     const truncatedWords = words.slice(0, wordCount);

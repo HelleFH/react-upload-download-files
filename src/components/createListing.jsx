@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import ImageUpload from './imageUpload'; 
+import ImageUpload from './imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -73,9 +73,9 @@ const CreateListingWithFileUpload = () => {
 
   return (
     <>
-            <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
-          Back to Listings
-        </Link>
+      <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+        Back to Listings
+      </Link>
       <Form className="search-form" onSubmit={handleListingSubmit}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
         <ImageUpload
@@ -118,13 +118,13 @@ const CreateListingWithFileUpload = () => {
             />
           </div>
         </div>
-        <div className='flex w-50 float-right'>
-        <button className="btn btn-outline-warning btn-block mt-4 mb-4 w-50" type="submit">
-          Submit
-        </button>
-        <button className=" btn btn-outline-warning btn-block mt-4 mb-4 w-50" type="submit">
-          Submit
-        </button>
+        <div className='d-flex w-100 float-right justify-content-end gap-2'>
+          <Link to="/" className="btn btn-outline-warning btn-block mt-4 mb-4 w-25">
+            Cancel
+          </Link>
+          <button className=" btn btn-outline-warning btn-block mt-4 mb-4 w-25" type="submit">
+            Submit
+          </button>
         </div>
       </Form>
     </>

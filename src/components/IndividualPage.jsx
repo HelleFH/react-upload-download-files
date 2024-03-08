@@ -4,13 +4,13 @@ import axios from "axios";
 import { API_URL } from "../utils/constants";
 import localListings from '../data/localListings.json';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import ListingCard from './ListingCard';
 
 const IndividualPage = () => {
   const [combinedListings, setCombinedListings] = useState([]);
   const [singleListing, setSingleListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedListingId, setSelectedListingId] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,18 +31,16 @@ const IndividualPage = () => {
   };
 
   const closeDeleteModal = () => {
-    setSelectedListingId(null);
     setShowDeleteModal(false);
   };
 
   const handleDeleteListing = async (listingId) => {
     try {
       await axios.delete(`${API_URL}/listings/${listingId}`);
-      // Update the state to remove the deleted listing
       setCombinedListings((prevListings) => prevListings.filter((listing) => listing._id !== listingId));
       console.log('Listing deleted successfully!');
-      setShowDeleteModal(false); // Close the modal after successful deletion
-      navigate('/'); // Navigate back to the home page using useNavigate
+      setShowDeleteModal(false);
+      navigate('/');
     } catch (error) {
       console.error('Error deleting listing:', error);
     }
@@ -62,53 +60,31 @@ const IndividualPage = () => {
 
   return (
     <div className="container mt-5">
-      <div className="row">
-        <div className="col-md-8 offset-md-2">
+      <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+        Back to Listings
+      </Link>
+      <div className='col-md-12'>
+        <div className='container-lg'>
           {loading ? (
-            <div className="text-center">Loading...</div>
+            <div className='text-center'>Loading...</div>
           ) : singleListing ? (
-            <div className="card mx-auto" style={{ maxWidth: "800px", background: "#fff" }}>
-              <img
-                src={singleListing.cloudinaryUrl}
-                className="card-img-top img-fluid"
-                alt=""
+            <div>
+              {/* Replace the existing HTML with the ListingCard component */}
+              <ListingCard listing={singleListing} onDelete={() => setShowDeleteModal(true)} />
+              <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                onCancel={closeDeleteModal}
+                onConfirm={() => {
+                  handleDeleteListing(singleListing._id);
+                  closeDeleteModal();
+                }}
               />
-              <div className="card-body">
-                <h2 className="card-title text-center mb-3">{singleListing.title}</h2>
-                <p className="card-text text-center text-muted">{singleListing.description}</p>
-                <div className="text-center">
-                  <button
-                    onClick={() => {
-                      setSelectedListingId(singleListing._id);
-                      setShowDeleteModal(true);
-                    }}
-                    className='delete-listing-button btn btn-danger'
-                    style={{ marginRight: '10px' }}
-                  >
-                    Delete Listing
-                  </button>
-                  <Link
-                    to={`/edit-listing/${singleListing._id}`}
-                    className='edit-listing-button btn btn-warning'
-                  >
-                    Edit Listing
-                  </Link>
-                </div>
-              </div>
             </div>
           ) : (
-            <div className="text-center">No Items Found</div>
+            <div className='text-center'>No Items Found</div>
           )}
         </div>
       </div>
-      <DeleteConfirmationModal
-        isOpen={showDeleteModal}
-        onCancel={closeDeleteModal}
-        onConfirm={() => {
-          handleDeleteListing(selectedListingId);
-          closeDeleteModal();
-        }}
-      />
     </div>
   );
 };

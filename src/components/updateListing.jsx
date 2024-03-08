@@ -32,16 +32,15 @@ function UpdateListingInfo(props) {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`https://react-upload-download-files-be.onrender.com/listings/${id}`)
+      .get(`${API_URL}/listings/${id}`)
       .then((res) => {
         setListing({
           title: res.data.title,
           description: res.data.description,
           location: res.data.location,
-
           cloudinaryUrl: res.data.cloudinaryUrl,
         });
-        setPreviewSrc(`${res.data.cloudinaryUrl}`);
+        setPreviewSrc(res.data.cloudinaryUrl);
       })
       .catch((err) => {
         console.error('Error fetching listing:', err);
@@ -51,6 +50,7 @@ function UpdateListingInfo(props) {
   const onChange = (e) => {
     setListing({ ...listing, [e.target.name]: e.target.value });
   };
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -80,14 +80,11 @@ function UpdateListingInfo(props) {
         console.log('Data being sent for update:', data);
 
         // Update the listing with the new data
-        const updateResponse = await axios.put(`https://react-upload-download-files-be.onrender.com/listings/${id}`, data);
+        const updateResponse = await axios.put(`${API_URL}/listings/${id}`, data);
 
         console.log('Listing updated successfully:', updateResponse.data);
-        navigate('/');
-
-
       } else {
-        // If no new file is selected, only update title and description
+        // If no new file is selected, only update title, description, and location
         const data = {
           title: listing.title,
           description: listing.description,
@@ -97,17 +94,13 @@ function UpdateListingInfo(props) {
         console.log('Data being sent for update:', data);
 
         // Update the listing with the existing data
-        const updateResponse = await axios.put(`https://react-upload-download-files-be.onrender.com/listings/${id}`, data);
+        const updateResponse = await axios.put(`${API_URL}/listings/${id}`, data);
 
         // Handle the update response as needed
         console.log('Listing updated successfully:', updateResponse.data);
       }
 
-      // Delete the old listing
-      const deleteResponse = await axios.delete(`https://react-upload-download-files-be.onrender.com/listings/${id}`);
-
-      console.log('Listing deleted successfully:', deleteResponse.data);
-
+      // Navigate back to the home page
       navigate('/');
     } catch (error) {
       console.error('Error updating or deleting listing:', error);
@@ -148,8 +141,18 @@ function UpdateListingInfo(props) {
                 onChange={onChange}
               />
             </div>
+            <div className='form-group'>
+              <label htmlFor='location'>Location</label>
+              <textarea
+                type='text'
+                placeholder='Location'
+                name='location'
+                className='form-control'
+                value={listing.location}
+                onChange={onChange}
+              />
+            </div>
 
-            <br />
             <div className='form-group'>
               <label htmlFor='description'>Description</label>
               <textarea
@@ -162,6 +165,7 @@ function UpdateListingInfo(props) {
               />
             </div>
             <br />
+
             <button
               type='submit'
               className='btn btn-outline-info btn-lg btn-block'
