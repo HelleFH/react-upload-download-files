@@ -12,7 +12,11 @@ var mongoose = require('mongoose');
 
 require('dotenv').config();
 
+var deleteRoutes = require('./routes/deleteRoutes');
+
 var listingRoutes = require('./routes/listingRoutes');
+
+var uploadRoutes = require('./routes/uploadRoutes');
 
 require('./config/db');
 
@@ -22,7 +26,9 @@ var _require = require('./model/listingModel'),
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(deleteRoutes);
 app.use(listingRoutes);
+app.use(uploadRoutes);
 app.use('/files', express["static"](path.join(__dirname, 'files'))); // MongoDB connection
 
 mongoose.connect(process.env.MONGO_URL, {
