@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_URL } from '../utils/constants';
 import ImageUpload from '../components/imageUpload';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; 
 
 
 const CreateListingWithFileUpload = () => {
