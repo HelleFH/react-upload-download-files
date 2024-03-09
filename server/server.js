@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
-const uploadRoutes = require('./routes/uploadRoutes');
-require('./config/db');
+const uploadRoute = require('./routes/uploadRoute');
+require('./db/db');
 const { Listing } = require('./model/listingModel');
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(deleteRoutes);
 app.use(listingRoutes);
-app.use(uploadRoutes);
+app.use(uploadRoute);
 app.use('/files', express.static(path.join(__dirname, 'files')));
 
 // MongoDB connection

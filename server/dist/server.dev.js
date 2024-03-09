@@ -16,9 +16,9 @@ var deleteRoutes = require('./routes/deleteRoutes');
 
 var listingRoutes = require('./routes/listingRoutes');
 
-var uploadRoutes = require('./routes/uploadRoutes');
+var uploadRoute = require('./routes/uploadRoute');
 
-require('./config/db');
+require('./db/db');
 
 var _require = require('./model/listingModel'),
     Listing = _require.Listing;
@@ -28,7 +28,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(deleteRoutes);
 app.use(listingRoutes);
-app.use(uploadRoutes);
+app.use(uploadRoute);
 app.use('/files', express["static"](path.join(__dirname, 'files'))); // MongoDB connection
 
 mongoose.connect(process.env.MONGO_URL, {
