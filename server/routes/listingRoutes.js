@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const cloudinary = require('cloudinary').v2;
 const { Listing } = require('../model/listingModel');
+const multer = require('multer');
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
