@@ -2,7 +2,7 @@
 
 var express = require('express');
 
-var _require = require('../model/listingModelModel'),
+var _require = require('../model/listingModel'),
     Listing = _require.Listing;
 
 var multer = require('multer');

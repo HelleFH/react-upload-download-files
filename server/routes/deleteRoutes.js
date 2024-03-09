@@ -1,5 +1,5 @@
 const express = require('express');
-const { Listing } = require('../model/listingModelModel');
+const { Listing } = require('../model/listingModel');
 const multer = require('multer');
 const fs = require('fs').promises; // For file operations
 const path = require('path'); // Import the path module
