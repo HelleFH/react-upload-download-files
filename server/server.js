@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(deleteRoutes);
 app.use(listingRoutes);
-app.use(uploadRoute);
+app.use(uploadRoutes);
 app.use('/files', express.static(path.join(__dirname, 'files')));
 
 // MongoDB connection
