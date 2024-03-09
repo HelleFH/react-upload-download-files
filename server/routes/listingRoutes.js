@@ -3,12 +3,34 @@ const router = express.Router();
 const cloudinary = require('cloudinary').v2;
 const { Listing } = require('../model/listingModel');
 const multer = require('multer');
+const fs = require('fs').promises;
 
-
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Multer configuration for file upload
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, './files');
+    },
+    filename(req, file, cb) {
+      cb(null, `${new Date().getTime()}_${file.originalname}`);
+    },
+  }),
+  limits: {
+    fileSize: 10000000, // max file size 1MB = 10000000 bytes
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
+      return cb(new Error('Only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.'));
+    }
+    cb(null, true); // continue with upload
+  },
 });
 
 router.get('/:id', async (req, res) => {
@@ -61,10 +83,6 @@ router.delete('/:id/delete-image', async (req, res) => {
 
     await cloudinary.uploader.destroy(listing.cloudinaryUrl);
 
-    // Optionally, update the listing data or remove the image URL from the listing
-    // listing.cloudinaryUrl = null;
-    // await listing.save();
-
     res.json({ msg: 'Image deleted successfully.' });
   } catch (error) {
     console.error('Error deleting image:', error);
@@ -88,40 +106,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-
-// Multer configuration for file upload
-const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, cb) {
-      cb(null, './files');
-    },
-    filename(req, file, cb) {
-      cb(null, `${new Date().getTime()}_${file.originalname}`);
-    },
-  }),
-  limits: {
-    fileSize: 10000000, // max file size 1MB = 10000000 bytes
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
-      return cb(
-        new Error(
-          'Only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.'
-        )
-      );
-    }
-    cb(null, true); // continue with upload
-  },
-});
-
-// Cloudinary configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// Route for handling both file upload and listing data submission
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     const { path } = req.file;
@@ -136,8 +120,6 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       description,
       location,
       cloudinaryUrl: result.secure_url,
-      // Note: You may or may not want to store the file_path and file_mimetype
-
     });
 
     // Save the listing to the database
@@ -151,5 +133,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
   } catch (error) {
     console.error('Error while uploading listing data:', error);
     res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
-  }  });
-  module.exports = router;
+  }
+});
+
+module.exports = router;
