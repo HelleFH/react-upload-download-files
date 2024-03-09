@@ -7,7 +7,7 @@ require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
-require('./utils/db');
+require('./config/db');
 const { Listing } = require('./model/listingModel');
 
 const app = express();
