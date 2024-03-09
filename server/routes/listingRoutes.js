@@ -37,7 +37,6 @@ router.get('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   const id = req.params.id;
-  const { title, description, location, cloudinaryUrl } = req.body;
   const updatedData = req.body;
 
   try {
@@ -59,6 +58,10 @@ router.delete('/:id/delete-image', async (req, res) => {
     }
 
     await cloudinary.uploader.destroy(listing.cloudinaryUrl);
+
+    // Optionally, update the listing data or remove the image URL from the listing
+    // listing.cloudinaryUrl = null;
+    // await listing.save();
 
     res.json({ msg: 'Image deleted successfully.' });
   } catch (error) {
@@ -85,11 +88,17 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/upload', async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file provided.' });
+    }
+
     const { path } = req.file;
     const { title, description, location } = req.body;
 
+    // Handle file upload logic (e.g., using Cloudinary)
     const result = await cloudinary.uploader.upload(path);
 
+    // Create a new listing with the uploaded file information
     const listing = new Listing({
       title,
       description,
@@ -97,12 +106,14 @@ router.post('/upload', async (req, res) => {
       cloudinaryUrl: result.secure_url,
     });
 
+    // Save the listing to the database
     await listing.save();
+
+    // Respond with success message
     res.json({ msg: 'Listing data uploaded successfully.' });
   } catch (error) {
     console.error('Error while uploading listing data:', error);
     res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
   }
 });
-
 module.exports = router;
