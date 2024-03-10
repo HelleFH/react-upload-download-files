@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 
 const ImageUpload = ({ onDrop, file, previewSrc, isPreviewAvailable }) => {
   const handleFileChange = (event) => {
@@ -18,12 +16,6 @@ const ImageUpload = ({ onDrop, file, previewSrc, isPreviewAvailable }) => {
     event.stopPropagation();
     const droppedFile = event.dataTransfer.files[0];
     onDrop([droppedFile]);
-  };
-  ImageUpload.propTypes = {
-    onDrop: PropTypes.func.isRequired,
-    file: PropTypes.object,
-    previewSrc: PropTypes.string,
-    isPreviewAvailable: PropTypes.bool,
   };
 
   return (

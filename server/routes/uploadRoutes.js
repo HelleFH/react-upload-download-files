@@ -1,7 +1,6 @@
 const express = require('express');
 const { Listing } = require('../model/listingModel');
 const fs = require('fs').promises;
-const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const router = express.Router();
 

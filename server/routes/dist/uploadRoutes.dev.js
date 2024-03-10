@@ -7,8 +7,6 @@ var _require = require('../model/listingModel'),
 
 var fs = require('fs').promises;
 
-var path = require('path');
-
 var cloudinary = require('cloudinary').v2;
 
 var router = express.Router(); // Cloudinary configuration
