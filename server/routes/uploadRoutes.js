@@ -11,27 +11,33 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Route for handling listing data submission with Cloudinary file upload
+// Route for handling file upload and listing data submission
 router.post('/upload', async (req, res) => {
   try {
-    const { title, description, location } = req.body;
-
     // Assuming 'file' is the field name used for file upload
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const { title, description, location, file } = req.body;
+
+    // Use cloudinary.uploader.upload_stream to handle the file upload directly
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      });
+
+      // Pipe the file buffer to the Cloudinary upload stream
+      file.pipe(uploadStream);
+    });
 
     const listing = new Listing({
       title,
       description,
       location,
       cloudinaryUrl: result.secure_url,
-      // Note: You may or may not want to store additional information
+      // Additional fields or data you want to store
     });
 
     // Save the listing to the database
     await listing.save();
-
-    // Remove the uploaded file after processing
-    await fs.unlink(req.file.path);
 
     // Respond with success message
     res.json({ msg: 'Listing data uploaded successfully.' });
