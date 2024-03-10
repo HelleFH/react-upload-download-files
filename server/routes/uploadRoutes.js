@@ -1,76 +1,76 @@
-require("dotenv").config();
-const express = require("express");
+const express = require('express');
 const { Listing } = require('../model/listingModel');
-const cloudinary = require("cloudinary").v2;
-const cors = require("cors");
-const Multer = require("multer");
+const multer = require('multer');
 const fs = require('fs').promises; // For file operations
+const path = require('path'); // Import the path module
+const cloudinary = require('cloudinary').v2; // Add Cloudinary library
+const router = express.Router();
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
-const storage = new Multer.memoryStorage();
-const upload = Multer({
-  storage,
-});
-
-async function handleUpload(file) {
-  const res = await cloudinary.uploader.upload(file, {
-    resource_type: "auto",
+// Multer configuration for file upload
+const upload = multer({
+    storage: multer.diskStorage({
+      destination(req, file, cb) {
+        cb(null, './files');
+      },
+      filename(req, file, cb) {
+        cb(null, `${new Date().getTime()}_${file.originalname}`);
+      },
+    }),
+    limits: {
+      fileSize: 10000000, // max file size 1MB = 10000000 bytes
+    },
+    fileFilter(req, file, cb) {
+      if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
+        return cb(
+          new Error(
+            'Only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.'
+          )
+        );
+      }
+      cb(null, true); // continue with upload
+    },
   });
-  return res;
-}
+  
+  // Cloudinary configuration
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+  
+  // Route for handling both file upload and listing data submission
+  router.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+      const { path } = req.file;
+      const { title, description, location } = req.body;
+  
+      // Upload file to Cloudinary
+      const result = await cloudinary.uploader.upload(path);
+  
+      // Create a new Listing with Cloudinary URL and other data
+      const listing = new Listing({
+        title,
+        description,
+        location,
+        cloudinaryUrl: result.secure_url,
+        // Note: You may or may not want to store the file_path and file_mimetype
 
-const app = express();
+      });
+  
+      // Save the listing to the database
+      await listing.save();
+  
+      // Remove the uploaded file after processing
+      await fs.unlink(path);
+  
+      // Respond with success message
+      res.json({ msg: 'Listing data uploaded successfully.' });
+    } catch (error) {
+      console.error('Error while uploading listing data:', error);
+      res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
+    }
+  });
+  module.exports = router;
 
-app.use(cors());
 
-app.get('/', function(req, res) {
-    res.send('Hi')
-})
-
-app.post("/upload", upload.single("file"), async (req, res) => {
-  try {
-    console.log('File upload successful.');
-
-    const { path: filePath } = req.file;
-    console.log('File path:', filePath);
-
-    // Extract values from req.body
-    const { title, description, location } = req.body;
-
-    // Upload file to Cloudinary
-    const result = await cloudinary.uploader.upload(filePath);
-
-    // Create a new Listing with Cloudinary URL and other data
-    const listing = new Listing({
-      title,
-      description,
-      location,
-      cloudinaryUrl: result.secure_url,
-      // Note: You may or may not want to store the file_path and file_mimetype
-    });
-
-    // Save the listing to the database
-    await listing.save();
-
-    // Remove the uploaded file after processing
-    await fs.unlink(filePath);
-
-    // Respond with success message
-    res.json({ msg: 'Listing data uploaded successfully.' });
-  } catch (error) {
-    console.error('Error while uploading listing data:', error);
-    res
-      .status(400)
-      .json({ error: 'Error while uploading listing data. Try again later.' });
-  }
-});
-
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Server Listening on ${port}`);
-});

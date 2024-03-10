@@ -10,13 +10,27 @@ const uploadRoutes = require('./routes/uploadRoutes');
 require('./config/db');
 const { Listing } = require('./model/listingModel');
 
+// Use Babel to transpile JSX files
+require('@babel/register')({
+  extensions: ['.jsx', '.js'],
+  presets: ['@babel/preset-env', '@babel/preset-react'],
+});
+
 const app = express();
+app.use(express.static(path.join(__dirname, 'public'), { type: 'application/javascript' }));
+
+// Move this block below the 'const app = express();'
+app.get('*.js', (req, res, next) => {
+  res.type('application/javascript');
+  next();
+});
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(deleteRoutes);
 app.use(listingRoutes);
 app.use(uploadRoutes);
+app.use('/files', express.static(path.join(__dirname, 'files')));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL, {
@@ -39,7 +53,6 @@ app.put('/listings/:id', async (req, res) => {
   const updatedData = req.body;
 
   try {
-    
     const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
     res.json(updatedListing);
   } catch (error) {
