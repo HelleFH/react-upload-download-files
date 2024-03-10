@@ -7,23 +7,11 @@ require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+require('./config/db');
 const { Listing } = require('./model/listingModel');
-
-// Use Babel to transpile JSX files
-require('@babel/register')({
-  extensions: ['.jsx', '.js'],
-  presets: ['@babel/preset-env', '@babel/preset-react'],
-});
 
 const app = express();
 
-// Move this block after the 'const app = express();'
-app.get('*.js', (req, res, next) => {
-  res.type('application/javascript');
-  next();
-});
-
-app.use(express.static(path.join(__dirname, 'public'), { type: 'application/javascript' }));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(deleteRoutes);
@@ -51,6 +39,7 @@ app.put('/listings/:id', async (req, res) => {
   const updatedData = req.body;
 
   try {
+    
     const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
     res.json(updatedListing);
   } catch (error) {
