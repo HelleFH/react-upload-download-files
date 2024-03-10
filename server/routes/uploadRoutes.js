@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
