@@ -20,7 +20,7 @@ var uploadRoute = require('./routes/uploadRoutes');
 
 require('./config/db');
 
-var _require = require('./model/listingModel'),
+var _require = require('./model/listing'),
     Listing = _require.Listing;
 
 var app = express();
