@@ -1,142 +1,76 @@
-import { useState } from 'react';
-import { Form } from 'react-bootstrap';
-import axios from 'axios';
-import { API_URL } from '../utils/constants';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+require("dotenv").config();
+const express = require("express");
+const { Listing } = require('../model/listingModel');
+const cloudinary = require("cloudinary").v2;
+const cors = require("cors");
+const Multer = require("multer");
+const fs = require('fs').promises; // For file operations
 
-const CreateListingWithFileUpload = () => {
-  const [file, setFile] = useState(null);
-  const [previewSrc, setPreviewSrc] = useState('');
-  const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const navigate = useNavigate();
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-  const [listing, setListing] = useState({
-    title: '',
-    description: '',
-    location: '',
+const storage = new Multer.memoryStorage();
+const upload = Multer({
+  storage,
+});
+
+async function handleUpload(file) {
+  const res = await cloudinary.uploader.upload(file, {
+    resource_type: "auto",
   });
+  return res;
+}
 
-  const onDrop = (files) => {
-    const [uploadedFile] = files;
-    setFile(uploadedFile);
+const app = express();
 
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      setPreviewSrc(fileReader.result);
-    };
-    fileReader.readAsDataURL(uploadedFile);
-    setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
-  };
+app.use(cors());
 
-  const handleListingSubmit = async (e) => {
-    e.preventDefault();
+app.get('/', function(req, res) {
+    res.send('Hi')
+})
 
-    try {
-      if (!file) {
-        setErrorMsg('Please select a file to add.');
-        return;
-      }
+app.post("/upload", upload.single("file"), async (req, res) => {
+  try {
+    console.log('File upload successful.');
 
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('title', listing.title);
-      formData.append('description', listing.description);
-      formData.append('location', listing.location);
+    const { path: filePath } = req.file;
+    console.log('File path:', filePath);
 
-      await axios.post(`${API_URL}/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    // Extract values from req.body
+    const { title, description, location } = req.body;
 
-      setFile(null);
-      setPreviewSrc('');
-      setIsPreviewAvailable(false);
-      navigate('/');
+    // Upload file to Cloudinary
+    const result = await cloudinary.uploader.upload(filePath);
 
-    } catch (error) {
-      console.error('Error in form submission:', error);
-      setErrorMsg('Error submitting the form. Please try again.');
-    }
-  };
-
-  const handleInputChange = (event) => {
-    setListing({
-      ...listing,
-      [event.target.name]: event.target.value,
+    // Create a new Listing with Cloudinary URL and other data
+    const listing = new Listing({
+      title,
+      description,
+      location,
+      cloudinaryUrl: result.secure_url,
+      // Note: You may or may not want to store the file_path and file_mimetype
     });
-  };
 
-  return (
-    <>
-      <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
-        Back to Listings
-      </Link>
-      <Form className="search-form" onSubmit={handleListingSubmit}>
-        {errorMsg && <p className="errorMsg">{errorMsg}</p>}
-        <div className='upload-zone' style={{ cursor: 'pointer' }}>
-          <div className='bg-light text-dark mt-2 mb-2 w-50 pl-1'>
-            <input name="file" type="file" className='text-dark ml-1' onChange={(e) => onDrop(e.target.files)} accept="image/*" />
-          </div>
-        </div>
-        {previewSrc ? (
-          isPreviewAvailable ? (
-            <div className="image-preview">
-              <img className="preview-image" src={previewSrc} alt="Preview" />
-            </div>
-          ) : (
-            <div className="preview-message">
-              <p>No preview available for this file</p>
-            </div>
-          )
-        ) : null}
-        <div className='form-container'>
-          {/* Listing form inputs */}
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Title"
-              name="title"
-              className="form-control"
-              value={listing.title}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <textarea
-              type="text"
-              placeholder="Description"
-              name="description"
-              className="form-control"
-              value={listing.description}
-              onChange={handleInputChange}
-              style={{ height: '150px', verticalAlign: 'top' }}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Location"
-              name="location"
-              className="form-control"
-              value={listing.location}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-        <div className='d-flex w-100 float-right justify-content-end gap-2'>
-          <Link to="/" className="btn btn-outline-warning btn-block mt-4 mb-4 w-25">
-            Cancel
-          </Link>
-          <button className=" btn btn-outline-warning btn-block mt-4 mb-4 w-25" type="submit">
-            Submit
-          </button>
-        </div>
-      </Form>
-    </>
-  );
-};
+    // Save the listing to the database
+    await listing.save();
 
-export default CreateListingWithFileUpload;
+    // Remove the uploaded file after processing
+    await fs.unlink(filePath);
+
+    // Respond with success message
+    res.json({ msg: 'Listing data uploaded successfully.' });
+  } catch (error) {
+    console.error('Error while uploading listing data:', error);
+    res
+      .status(400)
+      .json({ error: 'Error while uploading listing data. Try again later.' });
+  }
+});
+
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+  console.log(`Server Listening on ${port}`);
+});
