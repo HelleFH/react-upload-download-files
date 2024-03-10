@@ -14,22 +14,21 @@ const IndividualPage = () => {
   const [error, setError] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-
   const getSingleListing = async () => {
     try {
       const response = await axios.get(`${API_URL}/listings`);
       const mongodbListings = response.data;
-
+  
       setCombinedListings([...mongodbListings, ...localListings]);
       setLoading(false);
-      setError(null);
+      setError(null); // Clear the error if the request is successful
     } catch (error) {
       console.log('Error fetching listings:', error);
       setError('Error fetching listings. Please try again.');
       setLoading(false);
     }
   };
-
+  
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
   };

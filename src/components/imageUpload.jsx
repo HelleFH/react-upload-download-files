@@ -6,13 +6,33 @@ const ImageUpload = ({ onDrop, file, previewSrc, isPreviewAvailable }) => {
     onDrop([selectedFile]);
   };
 
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const droppedFile = event.dataTransfer.files[0];
+    onDrop([droppedFile]);
+  };
+
   return (
     <div className="upload-section w-100">
-      <div className='upload-zone' style={{ cursor: 'pointer' }}>
+      <div
+        className='upload-zone'
+        style={{ cursor: 'pointer' }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         <div className='bg-light text-dark mt-2 mb-2 w-75  p-1'>
-          <input  type="file" className='text-dark ml-1' onChange={handleFileChange} accept="image/*" />
-
-        
+          <input
+            type="file"
+            className='text-dark ml-1'
+            onChange={handleFileChange}
+            accept="image/*"
+          />
         </div>
       </div>
 
