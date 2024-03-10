@@ -32,7 +32,7 @@ const ImageUpload = ({ onDrop, file, previewSrc, isPreviewAvailable }) => {
             className='text-dark ml-1'
             onChange={handleFileChange}
             accept="image/*"
-            name="file"cd 
+            name="file"
           />
         </div>
       </div>

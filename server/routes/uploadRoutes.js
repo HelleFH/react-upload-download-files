@@ -1,6 +1,6 @@
 const express = require('express');
+const multer = require('multer');
 const { Listing } = require('../model/listingModel');
-const fs = require('fs').promises;
 const cloudinary = require('cloudinary').v2;
 const router = express.Router();
 
@@ -11,11 +11,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Multer configuration
+const upload = multer();
+
 // Route for handling file upload and listing data submission
-router.post('/upload', async (req, res) => {
+router.post('/upload', upload.single('file'), async (req, res) => {
   try {
-    // Assuming 'file' is the field name used for file upload
-    const { title, description, location, file } = req.body;
+    const { title, description, location } = req.body;
 
     // Use cloudinary.uploader.upload_stream to handle the file upload directly
     const result = await new Promise((resolve, reject) => {
@@ -25,7 +27,7 @@ router.post('/upload', async (req, res) => {
       });
 
       // Pipe the file buffer to the Cloudinary upload stream
-      file.pipe(uploadStream);
+      req.file.stream.pipe(uploadStream);
     });
 
     const listing = new Listing({
