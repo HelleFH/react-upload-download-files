@@ -17,5 +17,8 @@
   "scripts": {
     "build": "yarn build",
     "start": "node server.js"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5"
   }
 }
