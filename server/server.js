@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
-const uploadRoute = require('./routes/uploadRoute');
+const uploadRoute = require('./routes/uploadRoutes');
 require('./config/db');
 const { Listing } = require('./model/listingModel');
 

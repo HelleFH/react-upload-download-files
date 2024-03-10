@@ -16,7 +16,7 @@ var deleteRoutes = require('./routes/deleteRoutes');
 
 var listingRoutes = require('./routes/listingRoutes');
 
-var uploadRoute = require('./routes/uploadRoute');
+var uploadRoute = require('./routes/uploadRoutes');
 
 require('./config/db');
 
