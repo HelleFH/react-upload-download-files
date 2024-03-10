@@ -81,7 +81,7 @@ function UpdateListingInfo(props) {
         console.log('Data being sent for update:', data);
   
         // Update the listing with the new data
-        const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
+        const updateResponse = await axios.put(`${API_URL}/listings/${id}`, data);
   
         console.log('Listing updated successfully:', updateResponse.data);
         navigate('/');
@@ -98,14 +98,14 @@ function UpdateListingInfo(props) {
         console.log('Data being sent for update:', data);
   
         // Update the listing with the existing data
-        const updateResponse = await axios.put(`http://localhost:3030/listings/${id}`, data);
+        const updateResponse = await axios.put(`${API_URL}/listings/${id}`, data);
   
         // Handle the update response as needed
         console.log('Listing updated successfully:', updateResponse.data);
       }
   
       // Delete the old listing
-      const deleteResponse = await axios.delete(`http://localhost:3030/listings/${id}`);
+      const deleteResponse = await axios.delete(`${API_URL}/listings/${id}`);
   
       console.log('Listing deleted successfully:', deleteResponse.data);
   
