@@ -35,7 +35,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
     // Upload file to Cloudinary directly from the buffer
     const result = await cloudinary.uploader.upload_stream(
-      { resource_type: 'auto' },
+      { resource_type: 'auto', timeout: 60000 },  // Set the timeout to 60 seconds
       (error, result) => {
         if (error) {
           console.error('Error uploading to Cloudinary:', error);
