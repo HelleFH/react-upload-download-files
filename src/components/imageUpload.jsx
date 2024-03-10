@@ -1,27 +1,21 @@
 import React from 'react';
-import Dropzone from 'react-dropzone';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 const ImageUpload = ({ onDrop, file, previewSrc, isPreviewAvailable }) => {
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    onDrop([selectedFile]);
+  };
+
   return (
     <div className="upload-section">
-      <Dropzone onDrop={onDrop}>
-        {({ getRootProps, getInputProps }) => (
-          <div {...getRootProps({ className: 'drop-zone' })}>
-            <div className='drop-zone-container'>
-              <input {...getInputProps()} />
-              <p>Upload Image <FontAwesomeIcon icon={faCloudArrowUp} /></p>
+      <div className='upload-zone' style={{ cursor: 'pointer' }}>
+        <div className='bg-light text-dark mt-2 mb-2 w-50 pl-1'>
+          <input  type="file" className='text-dark ml-1' onChange={handleFileChange} accept="image/*" />
 
-              {file && (
-                <div>
-                  {file.name}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </Dropzone>
+        
+        </div>
+      </div>
+
       {previewSrc ? (
         isPreviewAvailable ? (
           <div className="image-preview">

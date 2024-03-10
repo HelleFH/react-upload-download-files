@@ -1,15 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import { API_URL } from '../utils/constants';
-import ImageUpload from '../components/imageUpload'; 
+import ImageUpload from '../components/imageUpload';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 const CreateListingWithFileUpload = () => {
   const [file, setFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState('');
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const dropRef = useRef();
+  const navigate = useNavigate();
 
   const [listing, setListing] = useState({
     title: '',
@@ -53,6 +56,7 @@ const CreateListingWithFileUpload = () => {
       setFile(null);
       setPreviewSrc('');
       setIsPreviewAvailable(false);
+      navigate('/');
 
     } catch (error) {
       console.error('Error in form submission:', error);
@@ -68,21 +72,24 @@ const CreateListingWithFileUpload = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
+      <Link to='/' className='mt-3 mb-3 btn btn-outline-warning float-right'>
+        Back to Listings
+      </Link>
       <Form className="search-form" onSubmit={handleListingSubmit}>
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
         <ImageUpload
-  onDrop={onDrop}
-  file={file}
-  previewSrc={previewSrc}
-  isPreviewAvailable={isPreviewAvailable}
-/>
+          onDrop={onDrop}
+          file={file}
+          previewSrc={previewSrc}
+          isPreviewAvailable={isPreviewAvailable}
+        />
         <div className='form-container'>
           {/* Listing form inputs */}
           <div className="form-group">
             <input
               type="text"
-              placeholder="Title of the Listing"
+              placeholder="Title"
               name="title"
               className="form-control"
               value={listing.title}
@@ -92,7 +99,7 @@ const CreateListingWithFileUpload = () => {
           <div className="form-group">
             <textarea
               type="text"
-              placeholder="Description of the Listing"
+              placeholder="Description"
               name="description"
               className="form-control"
               value={listing.description}
@@ -103,7 +110,7 @@ const CreateListingWithFileUpload = () => {
           <div className="form-group">
             <input
               type="text"
-              placeholder="Location of the Listing"
+              placeholder="Location"
               name="location"
               className="form-control"
               value={listing.location}
@@ -111,11 +118,16 @@ const CreateListingWithFileUpload = () => {
             />
           </div>
         </div>
-        <button className="btn btn-outline-warning btn-block mt-4 mb-4 w-100" type="submit">
-          Submit
-        </button>
+        <div className='d-flex w-100 float-right justify-content-end gap-2'>
+          <Link to="/" className="btn btn-outline-warning btn-block mt-4 mb-4 w-25">
+            Cancel
+          </Link>
+          <button className=" btn btn-outline-warning btn-block mt-4 mb-4 w-25" type="submit">
+            Submit
+          </button>
+        </div>
       </Form>
-    </React.Fragment>
+    </>
   );
 };
 
