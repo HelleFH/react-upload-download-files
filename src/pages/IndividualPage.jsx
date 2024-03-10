@@ -81,7 +81,7 @@ const IndividualPage = () => {
               />
             </div>
           ) : (
-            <div className='text-center'>No Items Found</div>
+            <div className='text-center'>No Items </div>
           )}
         </div>
       </div>
