@@ -33,7 +33,7 @@ function UpdateListingInfo(props) {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/listings/${id}`)
+      .get(`${API_URL}/listings/${id}`)
       .then((res) => {
         setListing({
           title: res.data.title,
