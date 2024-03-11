@@ -118,7 +118,7 @@ function UpdateListingInfo(props) {
           <div className='col-md-8 m-auto'>
             <br />
             <Link to='/' className='btn btn-outline-warning float-left'>
-              Show Book List
+              Back to listings
             </Link>
           </div>
           <div className='col-md-8 m-auto'>
@@ -161,7 +161,7 @@ function UpdateListingInfo(props) {
             <br />
             <button
               type='submit'
-              className='btn btn-outline-info btn-lg btn-block'
+              className='btn button button--orange btn-lg btn-block float right'
             >
               Update Listing
             </button>

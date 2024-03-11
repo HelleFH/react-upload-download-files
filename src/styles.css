@@ -36,7 +36,7 @@ p {
 }
 
 .button:hover {
-  transform: scale(0.99) !important;
+  transform: scale(1.01) !important;
 }
 
 .button {
@@ -59,14 +59,14 @@ p {
 
 
 .button--orange:hover {
-  background-color: #e5ad06;
+  background-color: 	#ffeb3b;
   border: 1px solid #ffc107;
-  color: #2c3e50;
+  color: black;
 
 }
 
 .button--blue:hover {
-  background-color: #233140;
+  background-color: #384f66;
   color: #ffc107;
   border: 1px solid #ffc107;
 
