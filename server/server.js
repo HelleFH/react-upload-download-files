@@ -7,18 +7,21 @@ require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+require('./config/db');
 const { Listing } = require('./model/listingModel');
 
 const app = express();
+
+// Update your CORS configuration to allow 'https://react-upload-download-files-fe.onrender.com'
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'https://react-upload-download-files-fe.onrender.com'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
-app.use(bodyParser.json()); // Move this line before your route handlers
+app.use(bodyParser.json());
 app.use(deleteRoutes);
 app.use(listingRoutes);
 app.use(uploadRoutes);

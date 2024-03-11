@@ -104,10 +104,6 @@ function UpdateListingInfo(props) {
         console.log('Listing updated successfully:', updateResponse.data);
       }
   
-      // Delete the old listing
-      const deleteResponse = await axios.delete(`${API_URL}/listings/${id}`);
-  
-      console.log('Listing deleted successfully:', deleteResponse.data);
   
       navigate('/');
     } catch (error) {
