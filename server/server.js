@@ -7,13 +7,18 @@ require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
-require('./config/db');
 const { Listing } = require('./model/listingModel');
 
 const app = express();
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
 
-app.use(cors());
-app.use(bodyParser.json());
+app.use(cors(corsOptions));
+app.use(bodyParser.json()); // Move this line before your route handlers
 app.use(deleteRoutes);
 app.use(listingRoutes);
 app.use(uploadRoutes);
@@ -39,7 +44,6 @@ app.put('/listings/:id', async (req, res) => {
   const updatedData = req.body;
 
   try {
-    
     const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
     res.json(updatedListing);
   } catch (error) {

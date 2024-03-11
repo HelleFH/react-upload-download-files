@@ -8,7 +8,7 @@ const router = express.Router();
 const upload = multer({
   storage: multer.memoryStorage(), // Store the file in memory instead of the local file system
   limits: {
-    fileSize: 10000000, // max file size 1MB = 10000000 bytes
+    fileSize: 100000000, // max file size 1MB = 10000000 bytes
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
@@ -27,44 +27,36 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Route for handling file upload and listing data submission
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
-    const { buffer, originalname } = req.file;
+    const { buffer } = req.file;
     const { title, description, location } = req.body;
 
     // Upload file to Cloudinary directly from the buffer
-    const result = await cloudinary.uploader.upload_stream(
-      { resource_type: 'auto', timeout: 60000 },  // Set the timeout to 60 seconds
-      (error, result) => {
-        if (error) {
-          console.error('Error uploading to Cloudinary:', error);
-          res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
-        } else {
-          // Create a new Listing with Cloudinary URL and other data
-          const listing = new Listing({
-            title,
-            description,
-            location,
-            cloudinaryUrl: result.secure_url,
-            // Note: You may or may not want to store the file_path and file_mimetype
-          });
+    const result = await cloudinary.uploader.upload_stream({ resource_type: 'auto' }, (error, result) => {
+      if (error) {
+        console.error('Error while uploading to Cloudinary:', error);
+        res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
+      } else {
+        // Create a new Listing with Cloudinary URL and other data
+        const listing = new Listing({
+          title,
+          description,
+          location,
+          cloudinaryUrl: result.secure_url,
+          // Note: You may or may not want to store the file_path and file_mimetype
+        });
 
-          // Save the listing to the database
-          listing.save();
+        // Save the listing to the database
+        listing.save();
 
-          // Respond with success message
-          res.json({ msg: 'Listing data uploaded successfully.' });
-        }
+        // Respond with success message
+        res.json({ msg: 'Listing data uploaded successfully.' });
       }
-    );
-
-    // Pipe the file buffer to the Cloudinary stream
-    const stream = cloudinary.uploader.upload_stream(result);
-    stream.end(buffer);
+    }).end(buffer);
   } catch (error) {
-    console.error('Error while uploading listing data:', error);
-    res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
+    console.error('Error while processing listing data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

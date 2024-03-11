@@ -78,7 +78,7 @@ const CreateListingWithFileUpload = () => {
           Back to Listings
         </button>
       </Link>
-      <Form className="search-form" onSubmit={handleListingSubmit}>
+      <Form className="search-form" onSubmit={handleListingSubmit} encType="multipart/form-data">
         {errorMsg && <p className="errorMsg">{errorMsg}</p>}
         <ImageUpload
           onDrop={onDrop}
