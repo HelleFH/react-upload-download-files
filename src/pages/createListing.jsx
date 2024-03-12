@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import axios from 'axios';
-import { API_URL } from '../utils/constants';
-import ImageUpload from '../components/imageUpload';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import ImageUpload from '../components/imageUpload';
+import { uploadListing } from '../store/appStore';
 
 const CreateListingWithFileUpload = () => {
   const [file, setFile] = useState(null);
@@ -32,36 +30,9 @@ const CreateListingWithFileUpload = () => {
     setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
   };
 
-  const handleListingSubmit = async (e) => {
+  const handleListingSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      if (!file) {
-        setErrorMsg('Please select a file to add.');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('title', listing.title);
-      formData.append('description', listing.description);
-      formData.append('location', listing.location);
-
-      await axios.post(`${API_URL}/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setFile(null);
-      setPreviewSrc('');
-      setIsPreviewAvailable(false);
-      navigate('/');
-
-    } catch (error) {
-      console.error('Error in form submission:', error);
-      setErrorMsg('Error submitting the form. Please try again.');
-    }
+    uploadListing(file, listing, setFile, setPreviewSrc, setIsPreviewAvailable, navigate, setErrorMsg);
   };
 
   const handleInputChange = (event) => {
@@ -73,8 +44,8 @@ const CreateListingWithFileUpload = () => {
 
   return (
     <>
-      <Link to='/' >
-        <button className='button button--blue mt-3 mb-3  float-right'>
+      <Link to='/'>
+        <button className='button button--blue mt-3 mb-3 float-right'>
           Back to Listings
         </button>
       </Link>
@@ -121,10 +92,10 @@ const CreateListingWithFileUpload = () => {
           </div>
         </div>
         <div className='d-flex w-100 float-right justify-content-end gap-2'>
-          <Link to="/" className="  mt-4 mb-4 w-25 button button--blue">
+          <Link to="/" className="mt-4 mb-4 w-25 button button--blue">
             Cancel
           </Link>
-          <button className="  mt-4 mb-4 w-25 button button--orange" type="submit">
+          <button className="mt-4 mb-4 w-25 button button--orange" type="submit">
             Submit
           </button>
         </div>
