@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import ImageUpload from '../components/imageUpload';
 import { fetchListingInfo, updateListingInfo } from '../store/appStore';
+import axios from 'axios';
+
+import { API_URL } from '../utils/constants';
 
 function UpdateListingInfo() {
   const dropRef = useRef();
@@ -37,7 +40,6 @@ function UpdateListingInfo() {
   const onChange = (e) => {
     setListing({ ...listing, [e.target.name]: e.target.value });
   };
-<<<<<<< HEAD
   
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -102,12 +104,6 @@ function UpdateListingInfo() {
     } catch (error) {
       console.error('Error updating or deleting listing:', error);
     }
-=======
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    updateListingInfo(id, listing, file, navigate, setFile);
->>>>>>> 5e7d41e258ed5dfc79c07ef140268d3eb7918e5a
   };
 
   return (
