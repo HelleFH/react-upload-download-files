@@ -37,7 +37,6 @@ function ShowListingList() {
   const renderError = () => (
     <div className='alert alert-danger'>{error || 'An unexpected error occurred.'}</div>
   );
-<<<<<<< HEAD
   const handleDeleteListing = async (listingId, cloudinaryPublicId) => {
     try {
       // Delete the listing on the server
@@ -70,9 +69,6 @@ function ShowListingList() {
     }
   };
   
-=======
-
->>>>>>> 5e7d41e258ed5dfc79c07ef140268d3eb7918e5a
   const openDeleteModal = (listingId) => {
     setSelectedListingId(listingId);
     setShowDeleteModal(true);
