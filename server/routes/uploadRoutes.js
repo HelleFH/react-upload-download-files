@@ -2,6 +2,7 @@ const express = require('express');
 const { Listing } = require('../model/listingModel');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+const asyncHandler = require('../middleware/asyncHandler'); // Update with the correct path
 const router = express.Router();
 
 // Multer configuration for file upload
@@ -26,6 +27,7 @@ cloudinary.config({
 });
 const { generateDeletionToken } = require('../utils/tokenUtils'); // Adjust the path accordingly
 
+<<<<<<< HEAD
 // Route to handle image upload and listing creation
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
@@ -43,11 +45,26 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       const deletionToken = generateDeletionToken();
 
       // Create a new Listing with Cloudinary URL, deletion token, and other data
+=======
+// Wrap the route handler with asyncHandler
+router.post('/upload', upload.single('file'), asyncHandler(async (req, res) => {
+  const { buffer } = req.file;
+  const { title, description, location } = req.body;
+
+  // Upload file to Cloudinary directly from the buffer
+  const result = await cloudinary.uploader.upload_stream({ resource_type: 'auto' }, (error, result) => {
+    if (error) {
+      console.error('Error while uploading to Cloudinary:', error);
+      res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
+    } else {
+      // Create a new Listing with Cloudinary URL and other data
+>>>>>>> 5e7d41e258ed5dfc79c07ef140268d3eb7918e5a
       const listing = new Listing({
         title,
         description,
         location,
         cloudinaryUrl: result.secure_url,
+<<<<<<< HEAD
         cloudinaryPublicId: result.public_id, // Store Cloudinary public ID
         cloudinaryDeleteToken: deletionToken, // Store Cloudinary delete token
       });
@@ -64,5 +81,18 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+=======
+        // Note: You may or may not want to store the file_path and file_mimetype
+      });
+
+      // Save the listing to the database
+      listing.save();
+
+      // Respond with success message
+      res.json({ msg: 'Listing data uploaded successfully.' });
+    }
+  }).end(buffer);
+}));
+>>>>>>> 5e7d41e258ed5dfc79c07ef140268d3eb7918e5a
 
 module.exports = router;

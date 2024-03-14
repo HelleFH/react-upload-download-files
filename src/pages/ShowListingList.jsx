@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import ListingCard from '../components/ListingCard';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
-
 import { API_URL } from '../utils/constants';
+import { truncateDescription, handleDeleteListing } from '../store/appStore';
 
 function ShowListingList() {
   const [combinedListings, setCombinedListings] = useState([]);
@@ -33,14 +33,11 @@ function ShowListingList() {
 
     fetchData();
   }, []); // Empty dependency array to ensure it runs only once
-  const truncateDescription = (description, wordCount) => {
-    const words = description.split(' ');
-    const truncatedWords = words.slice(0, wordCount);
-    return truncatedWords.join(' ') + (words.length > wordCount ? '...' : '');
-  };
+
   const renderError = () => (
     <div className='alert alert-danger'>{error || 'An unexpected error occurred.'}</div>
   );
+<<<<<<< HEAD
   const handleDeleteListing = async (listingId, cloudinaryPublicId) => {
     try {
       // Delete the listing on the server
@@ -73,6 +70,9 @@ function ShowListingList() {
     }
   };
   
+=======
+
+>>>>>>> 5e7d41e258ed5dfc79c07ef140268d3eb7918e5a
   const openDeleteModal = (listingId) => {
     setSelectedListingId(listingId);
     setShowDeleteModal(true);
@@ -83,31 +83,23 @@ function ShowListingList() {
     setShowDeleteModal(false);
   };
 
-
   const renderCards = () => {
-    console.log(combinedListings);  // Log the entire array
-
     return combinedListings.map((listing, index) => (
-
       <div key={listing.cloudinaryUrl ? `listing-${listing._id}` : `local-listing-${index}`} className='listing-card-container'>
         {listing.cloudinaryUrl ? (
-
           <ListingCard listing={{
             ...listing, description: truncateDescription(listing.description, 20),
           }} onDelete={() => openDeleteModal(listing._id)} />
         ) : (
-          <div
-
-          />
+          <div />
         )}
       </div>
     ));
   };
 
-
   return (
     <div className='ShowListingList'>
-      <h1 className='text-center display-1' style={{fontFamily:'Cormonrant'}}>Listings</h1>
+      <h1 className='text-center display-1' style={{ fontFamily: 'Cormonrant' }}>Listings</h1>
       <p className='text-center'>Feel free to create, edit or delete listings</p>
       <div className='col-md-12'>
         <Link to='/create-listing' className='mt-3 mb-3 btn btn-outline-warning float-right'>
@@ -127,7 +119,7 @@ function ShowListingList() {
         isOpen={showDeleteModal}
         onCancel={closeDeleteModal}
         onConfirm={() => {
-          handleDeleteListing(selectedListingId);
+          handleDeleteListing(selectedListingId, setCombinedListings, setShowDeleteModal);
           closeDeleteModal();
         }}
       />

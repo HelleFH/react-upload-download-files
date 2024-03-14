@@ -7,6 +7,7 @@ require('dotenv').config();
 const deleteRoutes = require('./routes/deleteRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+<<<<<<< HEAD
 require('./config/db');
 const { Listing } = require('./model/listingModel');
 const cloudinary = require('cloudinary').v2;
@@ -17,6 +18,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+=======
+const asyncHandler = require('./middleware/asyncHandler'); 
+const { Listing } = require('./model/listingModel'); 
+>>>>>>> 5e7d41e258ed5dfc79c07ef140268d3eb7918e5a
 const app = express();
 
 const corsOptions = {
@@ -32,7 +37,6 @@ app.use(deleteRoutes);
 app.use(listingRoutes);
 app.use(uploadRoutes);
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -46,20 +50,15 @@ db.once('open', () => {
 });
 
 // Update a listing by ID
-app.put('/listings/:id', async (req, res) => {
+app.put('/listings/:id', asyncHandler(async (req, res) => {
   const id = req.params.id;
   const { title, description, location, cloudinaryUrl, imagePublicId } = req.body;
 
   const updatedData = req.body;
 
-  try {
-    const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
-    res.json(updatedListing);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+  const updatedListing = await Listing.findByIdAndUpdate(id, updatedData, { new: true });
+  res.json(updatedListing);
+}));
 
 
 
