@@ -9,10 +9,16 @@ const listingRoutes = require('./routes/listingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 require('./config/db');
 const { Listing } = require('./model/listingModel');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 
-// Update your CORS configuration to allow 'https://react-upload-download-files-fe.onrender.com'
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://react-upload-download-files-fe.onrender.com'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -42,7 +48,7 @@ db.once('open', () => {
 // Update a listing by ID
 app.put('/listings/:id', async (req, res) => {
   const id = req.params.id;
-  const { title, description, location, cloudinaryUrl } = req.body;
+  const { title, description, location, cloudinaryUrl, imagePublicId } = req.body;
 
   const updatedData = req.body;
 
@@ -54,6 +60,9 @@ app.put('/listings/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
 
 const port = process.env.PORT || 3030;
 app.listen(port, () => {

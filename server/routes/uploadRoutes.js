@@ -11,10 +11,8 @@ const upload = multer({
     fileSize: 100000000, // max file size 1MB = 10000000 bytes
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
-      return cb(
-        new Error('Only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.')
-      );
+    if (!file.originalname.match(/\.(jpeg|jpg|png)$/)) {
+      return cb(new Error('Only upload files with jpeg, jpg, or png format.'));
     }
     cb(null, true); // continue with upload
   },
@@ -26,33 +24,40 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+const { generateDeletionToken } = require('../utils/tokenUtils'); // Adjust the path accordingly
 
+// Route to handle image upload and listing creation
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     const { buffer } = req.file;
     const { title, description, location } = req.body;
 
     // Upload file to Cloudinary directly from the buffer
-    const result = await cloudinary.uploader.upload_stream({ resource_type: 'auto' }, (error, result) => {
+    const result = await cloudinary.uploader.upload_stream({ resource_type: 'auto' }, async (error, result) => {
       if (error) {
         console.error('Error while uploading to Cloudinary:', error);
-        res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
-      } else {
-        // Create a new Listing with Cloudinary URL and other data
-        const listing = new Listing({
-          title,
-          description,
-          location,
-          cloudinaryUrl: result.secure_url,
-          // Note: You may or may not want to store the file_path and file_mimetype
-        });
-
-        // Save the listing to the database
-        listing.save();
-
-        // Respond with success message
-        res.json({ msg: 'Listing data uploaded successfully.' });
+        return res.status(400).json({ error: 'Error while uploading listing data. Try again later.' });
       }
+
+      // Generate a deletion token (this can be a random string or a unique identifier)
+      const deletionToken = generateDeletionToken();
+
+      // Create a new Listing with Cloudinary URL, deletion token, and other data
+      const listing = new Listing({
+        title,
+        description,
+        location,
+        cloudinaryUrl: result.secure_url,
+        cloudinaryPublicId: result.public_id, // Store Cloudinary public ID
+        cloudinaryDeleteToken: deletionToken, // Store Cloudinary delete token
+      });
+      
+
+      // Save the listing to the database
+      await listing.save();
+
+      // Respond with success message
+      res.json({ msg: 'Listing data uploaded successfully.' });
     }).end(buffer);
   } catch (error) {
     console.error('Error while processing listing data:', error);

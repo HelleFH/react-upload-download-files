@@ -52,41 +52,49 @@ function UpdateListingInfo(props) {
   const onChange = (e) => {
     setListing({ ...listing, [e.target.name]: e.target.value });
   };
+  
   const onSubmit = async (e) => {
     e.preventDefault();
   
     try {
       if (file) {
+        // Check if there is an existing image to delete
+        if (listing.cloudinaryUrl) {
+          // Extract the public ID from the existing cloudinaryUrl
+          const publicIdToDelete = listing.cloudinaryUrl.split('/').pop().split('.')[0];
+          console.log('Public ID to delete:', publicIdToDelete);
+  
+          // Delete the old image from Cloudinary
+          await axios.delete(`${API_URL}/delete-image/${publicIdToDelete}`);
+        }
         const formData = new FormData();
         formData.append('file', file);
-  
+
         formData.append('title', listing.title);
         formData.append('description', listing.description);
         formData.append('location', listing.location);
-  
+
         // Upload the new image
         const uploadResponse = await axios.post(`${API_URL}/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-  
+
         const data = {
           title: listing.title,
           description: listing.description,
           location: listing.location,
           cloudinaryUrl: uploadResponse.data.cloudinaryUrl,
         };
-  
+
         console.log('Data being sent for update:', data);
-  
+
         // Update the listing with the new data
         const updateResponse = await axios.put(`${API_URL}/listings/${id}`, data);
-  
+
         console.log('Listing updated successfully:', updateResponse.data);
         navigate('/');
-
-
       } else {
         // If no new file is selected, only update title and description
         const data = {
@@ -94,17 +102,16 @@ function UpdateListingInfo(props) {
           description: listing.description,
           location: listing.location,
         };
-  
+
         console.log('Data being sent for update:', data);
-  
+
         // Update the listing with the existing data
         const updateResponse = await axios.put(`${API_URL}/listings/${id}`, data);
-  
+
         // Handle the update response as needed
         console.log('Listing updated successfully:', updateResponse.data);
       }
-  
-  
+
       navigate('/');
     } catch (error) {
       console.error('Error updating or deleting listing:', error);

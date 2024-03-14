@@ -41,13 +41,28 @@ function ShowListingList() {
   const renderError = () => (
     <div className='alert alert-danger'>{error || 'An unexpected error occurred.'}</div>
   );
-
-  const handleDeleteListing = async (listingId) => {
+  const handleDeleteListing = async (listingId, cloudinaryPublicId) => {
     try {
+      // Delete the listing on the server
       const response = await axios.delete(`${API_URL}/listings/${listingId}`);
+  
       if (response.status === 200) {
         // Update the state to remove the deleted listing
         setCombinedListings((prevListings) => prevListings.filter((listing) => listing._id !== listingId));
+  
+        // Delete the Cloudinary image if a public ID is available
+        if (cloudinaryPublicId) {
+          console.log('Cloudinary public_id:', cloudinaryPublicId);
+  
+          try {
+            // Make sure to adjust the API endpoint for Cloudinary image deletion
+            const cloudinaryResponse = await axios.delete(`${API_URL}/delete-image/${cloudinaryPublicId}`);
+            console.log('Cloudinary image deletion response:', cloudinaryResponse.data);
+          } catch (cloudinaryError) {
+            console.error('Error deleting image from Cloudinary:', cloudinaryError);
+          }
+        }
+  
         console.log('Listing deleted successfully:', response.data);
         setShowDeleteModal(false); // Close the modal after successful deletion
       } else {
@@ -57,8 +72,7 @@ function ShowListingList() {
       console.error('Error deleting listing:', error);
     }
   };
-
-
+  
   const openDeleteModal = (listingId) => {
     setSelectedListingId(listingId);
     setShowDeleteModal(true);

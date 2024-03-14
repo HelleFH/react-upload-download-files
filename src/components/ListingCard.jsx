@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function ListingCard({ listing, onDelete }) {
   const handleDelete = (e) => {
     e.stopPropagation(); // Prevents the click event from propagating to the parent link
-    onDelete(listing._id);
+    onDelete(listing._id, listing.cloudinaryPublicId, listing.cloudinaryDeleteToken);
   };
 
   return (
@@ -46,6 +46,8 @@ function ListingCard({ listing, onDelete }) {
 ListingCard.propTypes = {
   listing: PropTypes.shape({
     _id: PropTypes.string.isRequired,
+    cloudinaryPublicId: PropTypes.string, // Include Cloudinary public ID
+    cloudinaryDeleteToken: PropTypes.string, // Include Cloudinary delete token
     cloudinaryUrl: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
